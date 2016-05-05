@@ -1,2 +1,25 @@
+<<<<<<< HEAD
 INDEX VERSION 1.127+C:\Users\jakemontgomery17\Documents\GitHub\BJChat\.metadata\.plugins\org.eclipse.jdt.core
 1203111423.index
+=======
+INDEX VERSION 1.127+C:\Users\breauxl\Documents\GitHub\BJChat\.metadata\.plugins\org.eclipse.jdt.core
+3454125809.index
+1574318262.index
+4004133052.index
+2486087126.index
+1604200090.index
+2338776811.index
+3441505722.index
+2193799835.index
+1832949699.index
+3991718231.index
+2743915309.index
+1065832147.index
+3095963708.index
+1028199574.index
+834584462.index
+1877021558.index
+1947431546.index
+828133061.index
+3598813974.index
+>>>>>>> origin/master
