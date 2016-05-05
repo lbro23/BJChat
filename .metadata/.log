@@ -184,3 +184,6 @@ Caused by: java.net.UnknownHostException: github.com
 	at org.eclipse.jgit.util.HttpSupport.response(HttpSupport.java:174)
 	at org.eclipse.jgit.transport.TransportHttp.connect(TransportHttp.java:469)
 	... 10 more
+
+!ENTRY org.eclipse.equinox.security 1 0 2016-05-05 15:07:20.680
+!MESSAGE New keyring password generated. 
