@@ -1,0 +1,13 @@
+package test;
+
+public class ServerThread extends Thread {
+	
+	public ServerThread() {
+		
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+}
