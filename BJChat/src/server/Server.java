@@ -1,4 +1,4 @@
-package test;
+package server;
 
 public class Server {
 
