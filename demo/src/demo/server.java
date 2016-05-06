@@ -15,6 +15,7 @@ public class server {
 		int number = sc.nextInt();
 		
 		number*=3;
+		System.out.println(number);
 		
 		PrintStream p = new PrintStream(ss.getOutputStream());
 		p.println(number);
