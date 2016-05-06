@@ -4,9 +4,14 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class cli {
+public class cli extends Thread {
+	
+	public static void main(String[] args) {
+		cli c = new cli();
+		c.start();
+	}
 
-	public static void main(String[] args){
+	public void run() {
 		try{
 		Scanner sc = new Scanner(System.in);
 		Socket sock = new Socket("10.20.0.231", 4445);
