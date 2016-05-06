@@ -9,7 +9,7 @@ public class cli {
 	public static void main(String[] args){
 		try{
 		Scanner sc = new Scanner(System.in);
-		Socket sock = new Socket("127.0.0.1", 4445);
+		Socket sock = new Socket("10.20.0.231", 4445);
 		Scanner sc1 = new Scanner(sock.getInputStream());
 		System.out.println("type any number");
 		int number = sc.nextInt();
