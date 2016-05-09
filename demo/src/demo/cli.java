@@ -17,7 +17,7 @@ public class cli extends Thread {
 		try { 
 			sc = new Scanner(System.in);
 			sock = new Socket("10.20.0.231", 4445);
-			
+			System.out.println("Say hi");
 		} catch (Exception e) {
 			
 		}
@@ -27,12 +27,12 @@ public class cli extends Thread {
 		try{
 			while(true){
 			Scanner sc1 = new Scanner(sock.getInputStream());
-			System.out.println("type any number");
-			int number = sc.nextInt();
+		
+			String line = sc.nextLine();
 			PrintStream p = new PrintStream(sock.getOutputStream());
 			
-			p.println(number);
-			System.out.println(sc1.nextInt());
+			p.println(line);
+			System.out.println(sc1.nextLine());
 			}
 		}catch (Exception e){
 			e.printStackTrace();

@@ -31,13 +31,13 @@ public class server extends Thread {
 			while(true){
 			Scanner sc = new Scanner(ss.getInputStream());
 			
-					int number = sc.nextInt();
+					String line = sc.nextLine();
 					
-					number*=3;
-					System.out.println(number);
+				
+					
 					
 					PrintStream p = new PrintStream(ss.getOutputStream());
-					p.println(number);
+					p.println(line);
 			}
 							
 				}catch(Exception e){
