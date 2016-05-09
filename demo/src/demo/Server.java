@@ -1,5 +1,6 @@
 package demo;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -14,7 +15,7 @@ public class Server extends Thread {
 		
 	public Server() {
 		try {
-			sock = new ServerSocket(4445);
+			sock = new ServerSocket(4446);
 			ss = sock.accept();
 			
 			this.start();
@@ -45,7 +46,18 @@ public class Server extends Thread {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try{ 
+				sock.close();
+				ss.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 
+	}
+	
+	public Socket getSocket() {
+		return ss;
 	}
 }

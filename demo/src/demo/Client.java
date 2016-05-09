@@ -1,5 +1,6 @@
 package demo;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
@@ -16,12 +17,24 @@ public class Client extends Thread {
 	
 	public Client(String name, String serverAddress, int port) {
 		try { 
+			this.name = name;
 			systemInput = new Scanner(System.in);
 			sock = new Socket(serverAddress, port);
 			serverInput = new Scanner(sock.getInputStream());
 			System.out.println("Type Messages, Then Press Enter to Send");
 			this.start();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Client(String name, Socket s) {
+		try{ 
+			this.name = name;
+			sock = s;
+			systemInput = new Scanner(System.in);
+			serverInput = new Scanner(sock.getInputStream());
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -41,6 +54,12 @@ public class Client extends Thread {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				sock.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
