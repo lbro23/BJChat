@@ -2,6 +2,7 @@ package demo;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.NoSuchElementException;
@@ -15,12 +16,16 @@ public class Server extends Thread {
 		
 	public Server() {
 		try {
-			sock = new ServerSocket(4446);
+			sock = new ServerSocket(4445);
 			ss = sock.accept();
 			
 			this.start();
 		}catch (Exception e) {
-			e.printStackTrace();
+			if(e instanceof BindException) {
+				e.printStackTrace();
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -38,7 +43,7 @@ public class Server extends Thread {
 	
 					// write to output
 					PrintStream p = new PrintStream(ss.getOutputStream());
-					p.println(line + "10");
+					p.println(line);
 				} catch (NoSuchElementException e) {
 					// continue
 				}

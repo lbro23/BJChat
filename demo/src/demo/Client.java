@@ -34,6 +34,7 @@ public class Client extends Thread {
 			sock = s;
 			systemInput = new Scanner(System.in);
 			serverInput = new Scanner(sock.getInputStream());
+			this.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
