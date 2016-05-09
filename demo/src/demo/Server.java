@@ -3,10 +3,11 @@ package demo;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Server extends Thread {
-	private ServerSocket sock;
+	ServerSocket sock;
 	Socket ss;
 
 
@@ -18,7 +19,7 @@ public class Server extends Thread {
 			
 			this.start();
 		}catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -29,13 +30,17 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			while (true) {
-				// read input line
-				Scanner sc = new Scanner(ss.getInputStream());
-				String line = sc.nextLine();
-
-				// write to output
-				PrintStream p = new PrintStream(ss.getOutputStream());
-				p.println(line);
+				try{
+					// read input line
+					Scanner sc = new Scanner(ss.getInputStream());
+					String line = sc.nextLine();
+	
+					// write to output
+					PrintStream p = new PrintStream(ss.getOutputStream());
+					p.println(line + "10");
+				} catch (NoSuchElementException e) {
+					// continue
+				}
 			}
 
 		} catch (Exception e) {

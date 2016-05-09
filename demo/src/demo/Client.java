@@ -10,18 +10,19 @@ public class Client extends Thread {
 	Scanner systemInput, serverInput;
 	
 	public static void main(String[] args) {
-		Client c = new Client(args[0]);
+		Client c = new Client(args[0], "localhost", 5454);
 		c.start();
 	}
 	
-	public Client(String s) {
+	public Client(String name, String serverAddress, int port) {
 		try { 
 			systemInput = new Scanner(System.in);
-			sock = new Socket("10.20.0.231", 4445);
+			sock = new Socket(serverAddress, port);
 			serverInput = new Scanner(sock.getInputStream());
 			System.out.println("Type Messages, Then Press Enter to Send");
+			this.start();
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 
