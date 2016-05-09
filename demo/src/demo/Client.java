@@ -18,9 +18,11 @@ public class Client extends Thread {
 	public Client(String name, String serverAddress, int port) {
 		try { 
 			this.name = name;
-			systemInput = new Scanner(System.in);
 			sock = new Socket(serverAddress, port);
+			
+			systemInput = new Scanner(System.in);
 			serverInput = new Scanner(sock.getInputStream());
+			
 			System.out.println("Type Messages, Then Press Enter to Send");
 			this.start();
 		} catch (Exception e) {
