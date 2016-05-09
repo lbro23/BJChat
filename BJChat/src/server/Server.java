@@ -1,5 +1,13 @@
 package server;
 
-public class Server {
+public class Server extends Thread {
+	
+	public Server() {
+		this.start();
+	}
 
+	@Override
+	public void run() {
+		
+	}
 }
