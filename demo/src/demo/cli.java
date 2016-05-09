@@ -25,6 +25,7 @@ public class cli extends Thread {
 
 	public void run() {
 		try{
+			while(true){
 			Scanner sc1 = new Scanner(sock.getInputStream());
 			System.out.println("type any number");
 			int number = sc.nextInt();
@@ -32,7 +33,7 @@ public class cli extends Thread {
 			
 			p.println(number);
 			System.out.println(sc1.nextInt());
-		
+			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}

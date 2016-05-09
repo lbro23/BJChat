@@ -28,7 +28,7 @@ public class server extends Thread {
 	
 	public void run(){
 		try{
-			
+			while(true){
 			Scanner sc = new Scanner(ss.getInputStream());
 			
 					int number = sc.nextInt();
@@ -38,7 +38,7 @@ public class server extends Thread {
 					
 					PrintStream p = new PrintStream(ss.getOutputStream());
 					p.println(number);
-				
+			}
 							
 				}catch(Exception e){
 					e.printStackTrace();
