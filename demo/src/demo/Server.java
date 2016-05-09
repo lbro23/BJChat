@@ -2,6 +2,7 @@ package demo;
 
 import java.awt.List;
 import java.io.IOException;
+
 import java.io.PrintStream;
 import java.net.BindException;
 import java.net.ServerSocket;
@@ -17,18 +18,13 @@ public class Server extends Thread {
 
 		
 	public Server() {
-		try {
+		try{ 
 			sock = new ServerSocket(4445);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		try {
 			client = sock.accept();
-		} catch(IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			
-		this.start();
+		
 	}
 	
 	public void run() {
@@ -60,7 +56,7 @@ public class Server extends Thread {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-		}
+			}
 
 	}
 }

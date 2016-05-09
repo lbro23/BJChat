@@ -1,6 +1,5 @@
 package demo;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
@@ -29,18 +28,6 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	public Client(String name, Socket s) {
-		try{ 
-			this.name = name;
-			sock = s;
-			systemInput = new Scanner(System.in);
-			serverInput = new Scanner(sock.getInputStream());
-			this.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void run() {
 		try {
@@ -57,12 +44,6 @@ public class Client extends Thread {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				sock.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
 		}
 
 	}
