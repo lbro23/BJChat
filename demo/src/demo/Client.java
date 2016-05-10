@@ -2,17 +2,14 @@ package demo;
 
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Client extends Thread {
 	String name;
 	Socket sock;
 	Scanner systemInput, serverInput;
-	
-	public static void main(String[] args) {
-		Client c = new Client(args[0], "localhost", 5454);
-		c.start();
-	}
+	boolean running = true;
 	
 	public Client(String name, String serverAddress, int port) {
 		try { 
@@ -27,11 +24,13 @@ public class Client extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("New Client Created!");
 	}
 
 	public void run() {
-		try {
-			while (true) {
+		System.out.println("Client Running!");
+		while (running) {
+			try {
 				// get line from console
 				String line = systemInput.nextLine();
 				PrintStream p = new PrintStream(sock.getOutputStream());
@@ -40,11 +39,20 @@ public class Client extends Thread {
 				p.println(name + ": " + line);
 
 				// print next line from server
-				System.out.println(serverInput.nextLine());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+				System.out.println(serverInput.nextLine());
+			} catch (Exception e) {
+				if(!(e instanceof NoSuchElementException)) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		// dont create memory leaks
+		try{
+			sock.close();
+			systemInput.close();
+			serverInput.close();
+		}catch(Exception e) {e.printStackTrace();}
 	}
 }
