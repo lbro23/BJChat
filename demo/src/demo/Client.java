@@ -9,6 +9,7 @@ public class Client extends Thread {
 	String name;
 	Socket sock;
 	Scanner systemInput, serverInput;
+	PrintStream outputStream;
 	boolean running = true;
 	
 	public Client(String name, String serverAddress, int port) {
@@ -19,28 +20,28 @@ public class Client extends Thread {
 			systemInput = new Scanner(System.in);
 			serverInput = new Scanner(sock.getInputStream());
 			
-			System.out.println("Type Messages, Then Press Enter to Send");
-			this.start();
+			outputStream = new PrintStream(sock.getOutputStream());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("New Client Created!");
+		System.out.println("Type Messages, Then Press Enter to Send");
 	}
 
 	public void run() {
-		System.out.println("Client Running!");
+		int i = 0;
 		while (running) {
 			try {
-				// get line from console
-				String line = systemInput.nextLine();
-				PrintStream p = new PrintStream(sock.getOutputStream());
-
-				// send line from console to the server
-				p.println(name + ": " + line);
-
-				// print next line from server
-
-				System.out.println(serverInput.nextLine());
+//				// get line from console
+//				String line = systemInput.nextLine();
+//
+//				// send line from console to the server
+//				p.println(name + ": " + line);
+//
+//				// print next line from server
+//
+//				System.out.println(serverInput.nextLine());
+				outputStream.println(i);
+				sleep(50);
 			} catch (Exception e) {
 				if(!(e instanceof NoSuchElementException)) {
 					e.printStackTrace();

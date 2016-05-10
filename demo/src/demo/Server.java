@@ -21,28 +21,27 @@ public class Server extends Thread {
 		try{ 
 			sock = new ServerSocket(port);
 			client = sock.accept();
-			this.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("New Server Created!");
-		
 	}
 	
 	public void run() {
 		System.out.println("Server Running!");
 		while (running) {
 			try {
-				// read input line
-				Scanner sc = new Scanner(client.getInputStream());
-				String line = sc.nextLine();
-				if (line != null) {
-					System.out.println("Server: " + line);
-
-					// write to output
-					PrintStream p = new PrintStream(client.getOutputStream());
-					p.println(line);
-					sc.close();
+				if(client != null) {
+					// read input line
+					Scanner sc = new Scanner(client.getInputStream());
+					String line = sc.nextLine();
+					
+					if (line != null) {	
+						// write to output
+						PrintStream p = new PrintStream(client.getOutputStream());
+						p.println(line);
+						sc.close();
+					}
 				}
 			} catch (Exception e) {
 				if (!(e instanceof NoSuchElementException)) {
