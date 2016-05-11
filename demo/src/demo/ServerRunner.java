@@ -41,6 +41,11 @@ public class ServerRunner implements Runnable {
 	private void check() {
 		if(!sock.isConnected()){
 			Server.remove(sock);
+			try{
+			sock.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 	}
