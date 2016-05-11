@@ -34,7 +34,6 @@ public class Client implements Runnable  {
 			e.printStackTrace();
 		}
 		try {
-			System.out.print('p');
 			Thread checkConsole = new Thread() {
 				public void run() {
 					while (true) {
@@ -52,22 +51,14 @@ public class Client implements Runnable  {
 				}
 			};
 
-			Thread checkServer = new Thread() {
-				public void run() {
-					while (true) {
-						if (serverInput.hasNext()) {
-							// print next line from server
-							System.out.println(serverInput.nextLine());
-						}
-						if (!running) {
-							break;
-						}
-					}
-				}
-			};
 			checkConsole.start();
-			checkServer.start();
 
+			while (true) {
+				if (serverInput.hasNext()) {
+					// print next line from server
+					System.out.println(serverInput.nextLine());
+				}
+			}
 		} catch (Exception e) {
 			if (!(e instanceof NoSuchElementException)) {
 				e.printStackTrace();
