@@ -9,6 +9,7 @@ public class ServerRunner implements Runnable {
 	Socket sock;
 	private Scanner input;
 	private PrintWriter output;
+	private boolean running;
 	
 	public ServerRunner(Socket sock){
 		this.sock = sock;
@@ -18,10 +19,10 @@ public class ServerRunner implements Runnable {
 			input = new Scanner(sock.getInputStream());
 			output = new PrintWriter(sock.getOutputStream());
 			
-			
+			running = true;
 				Thread checker = new Thread(){
 					public void run() {
-						while (true) {
+						while (running) {
 							check();
 						}
 					}
@@ -29,7 +30,7 @@ public class ServerRunner implements Runnable {
 				
 				Thread reader = new Thread(){
 					public void run(){
-					while(true){
+					while(running){
 					if(input.hasNext()){
 						String message = input.nextLine();
 						Server.say(sock, message);
@@ -50,9 +51,10 @@ public class ServerRunner implements Runnable {
 		
 	}
 	private void check() {
-		if(sock.isOutputShutdown()){
+		if(sock.isInputShutdown()){
 			System.out.println("code ran");
 			Server.remove(sock);
+			running = false;
 			try{
 			sock.close();
 			}catch(Exception e){
