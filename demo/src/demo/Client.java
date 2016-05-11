@@ -28,45 +28,49 @@ public class Client implements Runnable  {
 		try {
 			systemInput = new Scanner(System.in);
 			serverInput = new Scanner(sock.getInputStream());
-			
-			outputStream = new PrintStream(sock.getOutputStream());
-		} catch(IOException e) {e.printStackTrace(); }
-		
-		while (true) {
-			try {
-				System.out.print('p');
-				Thread checkConsole = new Thread() {
-					public void run() {
-						while(true) {
-							if(systemInput.hasNext()) {// get line from console
-								String line = systemInput.nextLine();
-								if(line.equals("/kill")) {kill();running = false; break;}
-								// send line from console to the server
-								outputStream.println(line);
-							}	
-						}
-					}
-				};
-				
-				Thread checkServer = new Thread() {
-					public void run() {
-						while(true) {
-							if(serverInput.hasNext()) {
-								// print next line from server
-								System.out.println(serverInput.nextLine());
-							}
-							if(!running) {break;}
-						}
-					}
-				};
-				checkConsole.start();
-				checkServer.start();
-				
 
-			} catch (Exception e) {
-				if(!(e instanceof NoSuchElementException)) {
-					e.printStackTrace();
+			outputStream = new PrintStream(sock.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			System.out.print('p');
+			Thread checkConsole = new Thread() {
+				public void run() {
+					while (true) {
+						if (systemInput.hasNext()) {// get line from console
+							String line = systemInput.nextLine();
+							if (line.equals("/kill")) {
+								kill();
+								running = false;
+								break;
+							}
+							// send line from console to the server
+							outputStream.println(line);
+						}
+					}
 				}
+			};
+
+			Thread checkServer = new Thread() {
+				public void run() {
+					while (true) {
+						if (serverInput.hasNext()) {
+							// print next line from server
+							System.out.println(serverInput.nextLine());
+						}
+						if (!running) {
+							break;
+						}
+					}
+				}
+			};
+			checkConsole.start();
+			checkServer.start();
+
+		} catch (Exception e) {
+			if (!(e instanceof NoSuchElementException)) {
+				e.printStackTrace();
 			}
 		}
 	}
