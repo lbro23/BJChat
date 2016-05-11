@@ -1,2 +1,0 @@
-java ClientStartup
-PAUSE

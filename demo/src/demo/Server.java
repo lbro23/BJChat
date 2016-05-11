@@ -17,18 +17,18 @@ public class Server  {
 	static ArrayList<String> names = new ArrayList<String>();
 	
 	public static void main(String[] args0){
-		 //uncomment to test
-		Thread t = new Thread() {
-			public void run() {
-				ClientStartup.main(null);
-			}
-		};
-		t.start();
+		// uncomment to test
+//		Thread t = new Thread() {
+//			public void run() {
+//				ClientStartup.main(null);
+//			}
+//		};
+		//t.start();
 		try
 		{
 			ServerSocket server = new ServerSocket(port);
 			System.out.println("Server created waiting for users...");
-			
+	
 			while(true){
 				Socket sock = server.accept();
 				addUser(sock);
