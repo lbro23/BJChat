@@ -11,6 +11,7 @@ public class Client implements Runnable  {
 	Socket sock;
 	Scanner systemInput, serverInput;
 	PrintStream outputStream;
+	boolean running;
 	
 	
 	public Client(String name, Socket sock) {
@@ -34,18 +35,34 @@ public class Client implements Runnable  {
 		while (true) {
 			try {
 				System.out.print('p');
-				Thread
-				if(serverInput.hasNext()) {
-					// print next line from server
-					System.out.println(serverInput.nextLine());
-				}
+				Thread checkConsole = new Thread() {
+					public void run() {
+						while(true) {
+							if(systemInput.hasNext()) {// get line from console
+								String line = systemInput.nextLine();
+								if(line.equals("/kill")) {kill();running = false; break;}
+								// send line from console to the server
+								outputStream.println(line);
+							}	
+						}
+					}
+				};
 				
-				if(systemInput.hasNext()) {// get line from console
-					String line = systemInput.nextLine();
-					if(line.equals("/kill")) {kill(); break;}
-					// send line from console to the server
-					outputStream.println(line);
-				}	
+				Thread checkServer = new Thread() {
+					public void run() {
+						while(true) {
+							if(serverInput.hasNext()) {
+								// print next line from server
+								System.out.println(serverInput.nextLine());
+							}
+							if(!running) {break;}
+						}
+					}
+				};
+				checkConsole.start();
+				checkServer.start();
+				
+
 			} catch (Exception e) {
 				if(!(e instanceof NoSuchElementException)) {
 					e.printStackTrace();
