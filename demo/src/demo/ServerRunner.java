@@ -52,7 +52,7 @@ public class ServerRunner implements Runnable {
 		
 	}
 	private void check() {
-		if(!sock.isConnected()){
+		if(!sock.isConnected() || sock.isClosed()){
 			Server.remove(sock);
 			try{
 			sock.close();
