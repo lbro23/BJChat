@@ -33,18 +33,19 @@ public class Client implements Runnable  {
 		
 		while (true) {
 			try {
-				if(systemInput.hasNext()) {// get line from console
-					String line = systemInput.nextLine();
-					if(line.equals("/kill")) {kill(); break;}
-					// send line from console to the server
-					outputStream.println(line);
-				}
-				
+				System.out.print('p');
+				Thread
 				if(serverInput.hasNext()) {
 					// print next line from server
 					System.out.println(serverInput.nextLine());
 				}
 				
+				if(systemInput.hasNext()) {// get line from console
+					String line = systemInput.nextLine();
+					if(line.equals("/kill")) {kill(); break;}
+					// send line from console to the server
+					outputStream.println(line);
+				}	
 			} catch (Exception e) {
 				if(!(e instanceof NoSuchElementException)) {
 					e.printStackTrace();
