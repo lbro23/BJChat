@@ -3,6 +3,7 @@ package demo;
 import java.awt.List;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,50 +11,55 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Server extends Thread {
-	ServerSocket sock;
-	Socket client;
-	boolean running = true;
-
-
-		
-	public Server(int port) {
-		try{ 
-			sock = new ServerSocket(port);
-			client = sock.accept();
-		} catch (Exception e) {
+public class Server  {
+	static final int port = 4445;
+	static ArrayList<Socket> users = new ArrayList<Socket>();
+	static ArrayList<String> names = new ArrayList<String>();
+	
+	public static void main(String[] args0){
+		try
+		{
+			ServerSocket server = new ServerSocket(port);
+			System.out.println("Server created waiting for users...");
+			
+			while(true){
+				Socket sock = server.accept();
+				addUser(sock);
+				
+				System.out.println("New user from " + sock.getLocalAddress().getHostName() + " has connected");
+			} 
+			
+		}catch(Exception e){
+			System.out.println("Unable to make server");
 			e.printStackTrace();
+			
 		}
-		System.out.println("New Server Created!");
+	}
+
+	private static void addUser(Socket sock) {
+		try{
+		users.add(sock);
+		Scanner input = new Scanner(sock.getInputStream());
+		String userName = input.nextLine();
+		names.add(userName);
+		
+		for(int i= 0; i <users.size(); i++){
+			Socket temp =  (users.get(i));
+			PrintWriter output = new PrintWriter(temp.getOutputStream());
+			output.print(userName + " has joined");
+		}
+		}catch(Exception e){
+			System.out.println("Unable to connect User");
+			e.printStackTrace();
+			
+		}
+		
 	}
 	
-	public void run() {
-		System.out.println("Server Running!");
-		while (running) {
-			try {
-				if(client != null) {
-					// read input line
-					Scanner sc = new Scanner(client.getInputStream());
-					String line = sc.nextLine();
-					
-					if (line != null) {	
-						// write to output
-						PrintStream p = new PrintStream(client.getOutputStream());
-						p.println(line);
-						sc.close();
-					}
-				}
-			} catch (Exception e) {
-				if (!(e instanceof NoSuchElementException)) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		// dont create memory leaks
-		try{
-			sock.close();
-			client.close();
-		}catch(Exception e) {e.printStackTrace();}
-	}
+	
+	
+	
 }
+
+		
+	
