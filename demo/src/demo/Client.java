@@ -1,5 +1,6 @@
 package demo;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.NoSuchElementException;
@@ -12,15 +13,10 @@ public class Client implements Runnable  {
 	PrintStream outputStream;
 	
 	
-	public Client(String name, String serverAddress, int port) {
+	public Client(String name, Socket sock) {
 		try { 
 			this.name = name;
-			sock = new Socket(serverAddress, port);
-			
-			systemInput = new Scanner(System.in);
-			serverInput = new Scanner(sock.getInputStream());
-			
-			outputStream = new PrintStream(sock.getOutputStream());
+			this.sock = sock;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -28,18 +24,26 @@ public class Client implements Runnable  {
 	}
 
 	public void run() {
+		try {
+			systemInput = new Scanner(System.in);
+			serverInput = new Scanner(sock.getInputStream());
+			
+			outputStream = new PrintStream(sock.getOutputStream());
+		} catch(IOException e) {e.printStackTrace(); }
+		
 		while (true) {
 			try {
-		// get line from console
-			String line = systemInput.nextLine();
-
-				// send line from console to the server
-				outputStream.println(line);
-
-				// print next line from server
-
-				System.out.println(serverInput.nextLine());
-			
+				if(systemInput.hasNext()) {// get line from console
+					String line = systemInput.nextLine();
+					if(line.equals("/kill")) {kill(); break;}
+					// send line from console to the server
+					outputStream.println(line);
+				}
+				
+				if(serverInput.hasNext()) {
+					// print next line from server
+					System.out.println(serverInput.nextLine());
+				}
 				
 			} catch (Exception e) {
 				if(!(e instanceof NoSuchElementException)) {
@@ -47,7 +51,10 @@ public class Client implements Runnable  {
 				}
 			}
 		}
-		
+	}
+	
+	public void kill() {
+		System.out.println("RIP");
 		// dont create memory leaks
 		try{
 			sock.close();
