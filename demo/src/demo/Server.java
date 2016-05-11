@@ -86,7 +86,7 @@ public class Server  {
 				e.printStackTrace();
 			}
 		}
-		users.remove(loc);
+		names.remove(loc);
 	}
 
 	public static void say(Socket sock, String message) {

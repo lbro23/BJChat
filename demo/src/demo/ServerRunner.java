@@ -46,13 +46,12 @@ public class ServerRunner implements Runnable {
 			
 		}catch(Exception e){
 			e.printStackTrace();
-		}finally{
-			
 		}
 		
 	}
 	private void check() {
-		if(!sock.isConnected() || sock.isClosed()){
+		if(sock.isOutputShutdown()){
+			System.out.println("code ran");
 			Server.remove(sock);
 			try{
 			sock.close();
