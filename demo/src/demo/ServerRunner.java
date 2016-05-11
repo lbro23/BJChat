@@ -20,8 +20,20 @@ public class ServerRunner implements Runnable {
 			
 			while(true){
 				check();
+				if(input.hasNext()){
+					String message = input.nextLine();
+					Server.say(sock, message);
+				}else{
+					
+					sock.close();
+					break;
+				}
+				
 			}
+			
 		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
 			
 		}
 		
