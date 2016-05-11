@@ -55,6 +55,26 @@ public class Server  {
 		}
 		
 	}
+	public static void remove(Socket s){
+		int loc = -1;
+		for(int i = 0; i< users.size(); i++){
+			if(users.get(i) == s){
+				users.remove(i);
+				loc = i;
+				System.out.println("user removed");
+				break;
+			}
+		}
+		for(int i = 0; i<users.size(); i++){
+			try{
+			PrintWriter p = new PrintWriter(users.get(i).getOutputStream());
+			p.println(names.get(loc)+ " has disconnected");
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		users.remove(loc);
+	}
 	
 	
 	
