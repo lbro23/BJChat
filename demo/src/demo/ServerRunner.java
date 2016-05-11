@@ -18,18 +18,31 @@ public class ServerRunner implements Runnable {
 			input = new Scanner(sock.getInputStream());
 			output = new PrintWriter(sock.getOutputStream());
 			
-			while(true){
-				check();
-				if(input.hasNext()){
-					String message = input.nextLine();
-					Server.say(sock, message);
-				}else{
-					
-					sock.close();
-					break;
-				}
+			
+				Thread checker = new Thread(){
+					public void run() {
+						while (true) {
+							check();
+						}
+					}
+				};
 				
-			}
+				Thread reader = new Thread(){
+					public void run(){
+					while(true){
+					if(input.hasNext()){
+						String message = input.nextLine();
+						Server.say(sock, message);
+					}	
+						}
+					}
+				};
+				checker.start();
+				reader.start();
+				
+				
+				
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
