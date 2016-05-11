@@ -1,6 +1,7 @@
 package demo;
 
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -10,11 +11,12 @@ public class ClientStartup {
 	public static void main(String[] args0) {
 		Socket sock = null;
 		Scanner in = new Scanner(System.in);
+		String ip;
 		while (sock == null) {
 			System.out.println("Enter valid server IP");
-			String ip = in.nextLine();
+			ip = in.nextLine();
 			try {
-				sock = new Socket(ip, port);
+				sock = new Socket(InetAddress.getByName(ip), port);
 			} catch (Exception e) {
 				System.out.println("Unable to connect to that ip");
 			}
@@ -29,7 +31,8 @@ public class ClientStartup {
 			System.out.println("you done messed up");
 		}
 		System.out.println("Connected to " + sock.getLocalAddress().getHostName());
-	
+		Client user = new Client(name, sock);
+		Thread x = new Thread(user);
 	}
 	
 }

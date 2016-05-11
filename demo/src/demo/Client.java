@@ -5,12 +5,12 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Client extends Thread {
+public class Client implements Runnable  {
 	String name;
 	Socket sock;
 	Scanner systemInput, serverInput;
 	PrintStream outputStream;
-	boolean running = true;
+	
 	
 	public Client(String name, String serverAddress, int port) {
 		try { 
@@ -28,20 +28,19 @@ public class Client extends Thread {
 	}
 
 	public void run() {
-		int i = 0;
-		while (running) {
+		while (true) {
 			try {
-//				// get line from console
-//				String line = systemInput.nextLine();
-//
-//				// send line from console to the server
-//				p.println(name + ": " + line);
-//
-//				// print next line from server
-//
-//				System.out.println(serverInput.nextLine());
-				outputStream.println(i);
-				sleep(50);
+		// get line from console
+			String line = systemInput.nextLine();
+
+				// send line from console to the server
+				outputStream.println(line);
+
+				// print next line from server
+
+				System.out.println(serverInput.nextLine());
+			
+				
 			} catch (Exception e) {
 				if(!(e instanceof NoSuchElementException)) {
 					e.printStackTrace();
