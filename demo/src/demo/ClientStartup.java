@@ -12,11 +12,13 @@ public class ClientStartup {
 		Socket sock = null;
 		Scanner in = new Scanner(System.in);
 		String ip;
+		InetAddress add = null;
 		while (sock == null) {
 			System.out.println("Enter valid server IP");
 			ip = in.nextLine();
 			try {
-				sock = new Socket(InetAddress.getByName(ip), port);
+				add = InetAddress.getByName(ip);
+				sock = new Socket(add, port);
 			} catch (Exception e) {
 				System.out.println("Unable to connect to that ip");
 			}
@@ -30,9 +32,10 @@ public class ClientStartup {
 		}catch(Exception e){
 			System.out.println("you done messed up");
 		}
-		System.out.println("Connected to " + sock.getLocalAddress().getHostName());
+		System.out.println("Connected to " + add.getHostName());
 		Client user = new Client(name, sock);
 		Thread x = new Thread(user);
+		x.start();
 	}
 	
 }
