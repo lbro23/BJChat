@@ -27,6 +27,10 @@ public class Server  {
 				addUser(sock);
 				
 				System.out.println("New user from " + sock.getLocalAddress().getHostName() + " has connected");
+				ServerRunner charizard = new ServerRunner(sock);
+				Thread serve = new Thread(charizard);
+				serve.start();
+				
 			} 
 			
 		}catch(Exception e){
@@ -47,9 +51,10 @@ public class Server  {
 			Socket temp =  (users.get(i));
 			PrintWriter output = new PrintWriter(temp.getOutputStream());
 			output.print(userName + " has joined");
+			output.flush();
 		}
 		}catch(Exception e){
-			System.out.println("Unable to connect User");
+			System.out.println(" Unable to connect User");
 			e.printStackTrace();
 			
 		}
@@ -61,7 +66,7 @@ public class Server  {
 			if(users.get(i) == s){
 				users.remove(i);
 				loc = i;
-				System.out.println("user removed");
+				System.out.println(s.getLocalAddress().getHostName() + " has disconnected");
 				break;
 			}
 		}
@@ -69,11 +74,32 @@ public class Server  {
 			try{
 			PrintWriter p = new PrintWriter(users.get(i).getOutputStream());
 			p.println(names.get(loc)+ " has disconnected");
+			p.flush();
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 		users.remove(loc);
+	}
+
+	public static void say(Socket sock, String message) {
+		int loc = -1;
+		for(int i = 0; i< users.size(); i++){
+			if(users.get(i) == sock){
+				loc = i;
+				break;
+			}
+		} 
+		for(int i = 0; i<users.size(); i++){
+			try{
+			PrintWriter p = new PrintWriter(users.get(i).getOutputStream());
+			p.println(names.get(loc)+ ": " + message);
+			p.flush();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	
