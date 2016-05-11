@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class clientStartup {
+public class ClientStartup {
 	final static int port = 4445;
 
 	public static void main(String[] args0) {
