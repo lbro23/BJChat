@@ -26,7 +26,7 @@ public class Server  {
 				Socket sock = server.accept();
 				addUser(sock);
 				
-				System.out.println("New user from " + sock.getLocalAddress().getHostName() + " has connected");
+				System.out.println("New user from " + sock.getInetAddress().getHostName() + " has connected");
 				ServerRunner charizard = new ServerRunner(sock);
 				Thread serve = new Thread(charizard);
 				serve.start();
@@ -50,7 +50,7 @@ public class Server  {
 		for(int i= 0; i <users.size(); i++){
 			Socket temp =  (users.get(i));
 			PrintWriter output = new PrintWriter(temp.getOutputStream());
-			output.print(userName + " has joined");
+			output.print(userName + " has joined" + "\n");
 			output.flush();
 		}
 		}catch(Exception e){
@@ -66,7 +66,7 @@ public class Server  {
 			if(users.get(i) == s){
 				users.remove(i);
 				loc = i;
-				System.out.println(s.getLocalAddress().getHostName() + " has disconnected");
+				System.out.println(s.getInetAddress().getHostName() + " has disconnected");
 				break;
 			}
 		}
