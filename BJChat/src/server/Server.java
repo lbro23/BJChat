@@ -1,6 +1,9 @@
 package server;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,20 +14,35 @@ public class Server extends Thread{
 	int currentId = 1;
 	ServerSocket serverSocket;
 	ArrayList<ClientHandler> clients;
-	Scanner input;
+	ServerGui gui;
 	boolean running;
 	
 	
-	public Server(int port) {
+	public Server(int port, ServerGui gui) {
 		try {
 			// create socket
 			serverSocket = new ServerSocket(port);
 			clients = new ArrayList<ClientHandler>();
 			running = true;
-			System.out.println("New Server Created Successfully");
-			//this.start();
-			//input = new Scanner(System.in);
-			
+			this.gui = gui;
+			gui.println("New Server Created Successfully");
+			this.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Server() {
+		this(defaultPort, null);
+	}
+	
+	/**
+	 * Handle user input from console
+	 */
+	@Override
+	public void run() {
+		try{ 
+			gui.println("Awaiting Users..." );
 			// accept users
 			while(running) {
 				// connect to user, gather information
@@ -39,26 +57,11 @@ public class Server extends Thread{
 				clients.add(handler);
 				newThread.start();
 				
-				System.out.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
+				gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
 				sayToAllClients(name + " has joined the server");
 			}
-		} catch (Exception e) {
+		}catch(Exception e) {
 			e.printStackTrace();
-		}
-	}
-	
-	public Server() {
-		this(defaultPort);
-	}
-	
-	/**
-	 * Handle user input from console
-	 */
-	@Override
-	public void run() {
-		while(running) {
-			String message = input.nextLine();
-			sayToAllClients("[Server]: " + message);
 		}
 	}
 	
@@ -66,6 +69,7 @@ public class Server extends Thread{
 	 * Say the message to all clients
 	 */
 	public void sayToAllClients(String message) {
+		gui.println(message);
 		for(ClientHandler c: clients) {
 			c.sayToClient(message);
 		}

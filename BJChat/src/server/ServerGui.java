@@ -3,8 +3,14 @@ package server;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -14,11 +20,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-public class ServerGui extends JFrame {
+import client.Client;
+
+public class ServerGui extends JFrame implements ActionListener, KeyListener{
+	Server server;
 	JTextField input;
 	JTextPane console;
 	JTextPane users;
 	JButton button;
+	PrintStream output;
+	Scanner serverInput;
 	
 	public ServerGui() {
 		super("BJ Chat Server");
@@ -28,6 +39,7 @@ public class ServerGui extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setupGui();
 		this.setVisible(true);
+		server = new Server(4445, this);
 	}
 	
 	public void setupGui() {
@@ -35,6 +47,8 @@ public class ServerGui extends JFrame {
 		console = new JTextPane();
 		users = new JTextPane();
 		button = new JButton("Send");
+		
+		button.addActionListener(this);
 		
 		console.setEditable(false);
 		console.setPreferredSize(new Dimension(100, this.getHeight() - 100));
@@ -88,6 +102,13 @@ public class ServerGui extends JFrame {
 	
 	public static void main(String[] args) {
 		ServerGui gui = new ServerGui();
+		
+		Thread t = new Thread() { 
+			public void run() {
+				Client s = new Client();
+			}
+		};
+		t.start();
 	}
 	
 	public WindowListener createWindowListener() {
@@ -111,5 +132,31 @@ public class ServerGui extends JFrame {
 		};
 		
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == button) {
+			this.println(input.getText());
+			input.setText("");
+		}
+	}
+	
+	public void println(String message) {
+		String currentText = console.getText();
+		currentText += message + "\n";
+		console.setText(currentText);
+		//console.update(this.getGraphics());
+	}
+
+	@Override
+	public void keyTyped(KeyEvent paramKeyEvent) {}
+
+	@Override
+	public void keyPressed(KeyEvent paramKeyEvent) {
+		actionPerformed(new ActionEvent(button, 0, "Button Pressed"));
+	}
+
+	@Override
+	public void keyReleased(KeyEvent paramKeyEvent) {}
 
 }
