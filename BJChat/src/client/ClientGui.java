@@ -33,7 +33,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	int port = 4445;
 	
 	public ClientGui(){
-		super("BJ Chat Server");
+		super("BJ Chat");
 		this.setLocation(300, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());
