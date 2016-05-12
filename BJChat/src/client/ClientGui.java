@@ -23,6 +23,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
+import server.ServerGui;
+
 public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	private final static String newLine = "\n";
 	JTextPane console;
@@ -41,7 +43,9 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		setupGui();
 		this.setVisible(true);
 		Socket s = connect();
-		Client cli = new Client(this, s);
+		this.println("Type desired username, then press ENTER");
+		String name = userInputNextLine();
+		Client cli = new Client(this, s, name);
 	}
 
 	private Socket connect() {
@@ -163,6 +167,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	}
 	
 	public static void main(String[] args0){
+		ServerGui s = new ServerGui();
 		ClientGui p = new ClientGui();
 	}
 

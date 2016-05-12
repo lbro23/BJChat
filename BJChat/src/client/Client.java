@@ -19,7 +19,7 @@ public class Client extends Thread {
 	boolean running;
 	
 	// PRECONDITION: s must be an open socket with the host
-	public Client(ClientGui gui, Socket s) {
+	public Client(ClientGui gui, Socket s, String name) {
 		recentInput = "";
 		socket = s;
 		try {
@@ -29,11 +29,8 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		
-		// get username
-		gui.println("Type desired Username, then press ENTER");
-		userName = userInputNextLine();
+		this.userName = name;
 		toServer.println(userName);
-		running = true;
 		this.start();
 	}
 	
