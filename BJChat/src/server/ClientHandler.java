@@ -2,7 +2,7 @@ package server;
 /**
  * This class will listen to the input stream from this client and be responsible for
  * soliciting a response from the server to this client
- * @author Leon
+ * @author Leon Breaux
  *
  */
 public class ClientHandler implements Runnable {
@@ -34,6 +34,8 @@ public class ClientHandler implements Runnable {
 				} else {
 					command = message.substring(slashLoc+1,commandEnd);
 				}
+				// execute command
+				executeCommand(command);
 				server.sayToAllClients("[COMMAND] CID " + user.getID() + ": " + command);
 				// message has '\', its a command
 			} else {
@@ -56,6 +58,21 @@ public class ClientHandler implements Runnable {
 	public void close() {
 		running = false;
 		user.close();
+	}
+	
+	public void executeCommand(String command) {
+		if(eq(command, "killserver")) {
+			server.close();
+		} else if(eq(command, "ping")) {
+			sayToClient("\\pingresponse");
+		} else if(eq(command, "disconnect") || eq(command, "exit")) {
+			this.close();
+			// TODO disconnect from server
+		}
+	}
+	
+	public boolean eq(String str1, String str2) {
+		return str1.compareToIgnoreCase(str2) == 0;
 	}
 	
 	

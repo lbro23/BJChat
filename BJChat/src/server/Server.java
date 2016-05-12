@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -68,6 +69,24 @@ public class Server extends Thread{
 	public void sayToAllClients(String message) {
 		for(ClientHandler c: clients) {
 			c.sayToClient(message);
+		}
+	} // TODO ADD SOCKET CLOSED HANDLING AT ALL THREADS
+	
+	/**
+	 * Close this server and all associated connections
+	 */
+	public void close() {
+		try {
+			for(ClientHandler c: clients) {
+				c.close();
+			}
+			running = false;
+			serverSocket.close();
+			input.close();
+		} catch (SocketException e) {
+			// Swallow
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
