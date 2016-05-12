@@ -9,9 +9,8 @@ import java.util.Scanner;
 
 public class Client extends Thread {
 	static int defaultPort = 4445;
-	
+	String recentInput;
 	Socket socket;
-	Scanner userInput;
 	Scanner fromServer;
 	PrintStream toServer;
 	String userName;
@@ -22,26 +21,25 @@ public class Client extends Thread {
 	
 	public Client(int port, ClientGui gui) {
 		InetAddress serverAddress = null;
-		userInput = new Scanner(System.in);
 		// get address
 		while(socket == null) {
 			try {
-				System.out.println("Type desired Server Address, then press ENTER");
-				serverAddress = InetAddress.getByName(userInput.nextLine());
+				gui.println("Type desired Server Address, then press ENTER");
+				serverAddress = InetAddress.getByName(userInputNextLine());
 				socket = new Socket(serverAddress, port);
 				toServer = new PrintStream(socket.getOutputStream());
 				fromServer = new Scanner(socket.getInputStream());
 			} catch(UnknownHostException e) {
-				System.out.println("Invalid Host Name! Please Try Again");
+				gui.println("Invalid Host Name! Please Try Again");
 			} catch(ConnectException e) {
-				System.out.println("No Server Found! Is the address correct?");
+				gui.println("No Server Found! Is the address correct?");
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
-		System.out.println("Type desired Username, then press ENTER");
-		userName = userInput.nextLine();
+		gui.println("Type desired Username, then press ENTER");
+		userName = userInputNextLine();
 		toServer.println(userName);
 		running = true;
 		this.start();
@@ -56,23 +54,36 @@ public class Client extends Thread {
 		Thread t = new Thread() {
 			public void run() {
 				while(running) {
-					System.out.println(fromServer.nextLine());
+					gui.println(fromServer.nextLine());
 				}
 			}
 		};
 		t.start();
 		
 		while(running) {
-			String line = userInput.nextLine();
+			String line = userInputNextLine();
 			toServer.println(userName + ": " + line);
 		}
 	}
 	
 	public void sendLine(String message) {
-		// TODO
+		recentInput = message;
 	}
 	
 	public static void main(String[] args) {
 		Client c = new Client();
+	}
+	
+	public String userInputNextLine() {
+		while(recentInput.equals("")) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		String result = recentInput;
+		recentInput = "";
+		return result;
 	}
 }
