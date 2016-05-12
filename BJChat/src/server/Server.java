@@ -16,7 +16,7 @@ public class Server extends Thread{
 	ArrayList<ClientHandler> clients;
 	ServerGui gui;
 	boolean running;
-	
+	// hello
 	
 	public Server(int port, ServerGui gui) {
 		try {
