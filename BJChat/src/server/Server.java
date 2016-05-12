@@ -74,15 +74,4 @@ public class Server extends Thread{
 			c.sayToClient(message);
 		}
 	}
-	
-	public static void main(String[] args) {
-		Thread t = new Thread() { 
-			public void run() {
-				Server s = new Server();
-			}
-		};
-		t.start();
-		
-		client.Client c = new client.Client();
-	}
 }

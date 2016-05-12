@@ -18,36 +18,23 @@ public class Client extends Thread {
 	
 	boolean running;
 	
-	
-	public Client(int port, ClientGui gui) {
-		InetAddress serverAddress = null;
-		// get address
+	// PRECONDITION: s must be an open socket with the host
+	public Client(ClientGui gui, Socket s) {
 		recentInput = "";
-		while(socket == null) {
-			try {
-				gui.println("Type desired Server Address, then press ENTER");
-				serverAddress = InetAddress.getByName(userInputNextLine());
-				socket = new Socket(serverAddress, port);
-				toServer = new PrintStream(socket.getOutputStream());
-				fromServer = new Scanner(socket.getInputStream());
-			} catch(UnknownHostException e) {
-				gui.println("Invalid Host Name! Please Try Again");
-			} catch(ConnectException e) {
-				gui.println("No Server Found! Is the address correct?");
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+		socket = s;
+		try {
+			toServer = new PrintStream(socket.getOutputStream());
+			fromServer = new Scanner(socket.getInputStream());
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		
+		// get username
 		gui.println("Type desired Username, then press ENTER");
 		userName = userInputNextLine();
 		toServer.println(userName);
 		running = true;
 		this.start();
-	}
-	
-	public Client() {
-		this(defaultPort, null);
 	}
 	
 	@Override
