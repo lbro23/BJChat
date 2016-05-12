@@ -13,6 +13,7 @@ public class ClientStartup {
 		Scanner in = new Scanner(System.in);
 		String ip;
 		InetAddress add = null;
+		
 		while (sock == null) {
 			System.out.println("Enter valid server IP");
 			ip = in.nextLine();

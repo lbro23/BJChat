@@ -12,18 +12,25 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Server  {
-	static final int port = 4445;
-	static ArrayList<Socket> users = new ArrayList<Socket>();
-	static ArrayList<String> names = new ArrayList<String>();
+	ArrayList<Socket> users = new ArrayList<Socket>();
+	ArrayList<String> names = new ArrayList<String>();
 	
-	public static void main(String[] args0){
+	public static void main(String[] args){
+		if(args.length > 0) {
+			Server s = new Server(Integer.parseInt(args[0]));
+		} else {
+			Server s = new Server();
+		}
+	}
+	
+	public Server(int port) {
 		// uncomment to test
-//		Thread t = new Thread() {
-//			public void run() {
-//				ClientStartup.main(null);
-//			}
-//		};
-		//t.start();
+		Thread t = new Thread() {
+			public void run() {
+				ClientStartup.main(null);
+			}
+		};
+		t.start();
 		try
 		{
 			ServerSocket server = new ServerSocket(port);
@@ -34,7 +41,7 @@ public class Server  {
 				addUser(sock);
 				
 				System.out.println("New user from " + sock.getInetAddress().getHostName() + " has connected");
-				ServerRunner charizard = new ServerRunner(sock);
+				ServerRunner charizard = new ServerRunner(this, sock);
 				Thread serve = new Thread(charizard);
 				serve.start();
 				
@@ -46,8 +53,13 @@ public class Server  {
 			
 		}
 	}
+	
+	public Server() {
+		// default port
+		this(4445);
+	}
 
-	private static void addUser(Socket sock) {
+	private void addUser(Socket sock) {
 		try{
 		users.add(sock);
 		Scanner input = new Scanner(sock.getInputStream());
@@ -67,7 +79,7 @@ public class Server  {
 		}
 		
 	}
-	public static void remove(Socket s){
+	public void remove(Socket s){
 		int loc = -1;
 		for(int i = 0; i< users.size(); i++){
 			if(users.get(i) == s){
@@ -89,7 +101,7 @@ public class Server  {
 		names.remove(loc);
 	}
 
-	public static void say(Socket sock, String message) {
+	public void say(Socket sock, String message) {
 		int loc = -1;
 		for(int i = 0; i< users.size(); i++){
 			if(users.get(i) == sock){
