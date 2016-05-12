@@ -45,7 +45,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		Socket s = connect();
 		this.println("Type desired username, then press ENTER");
 		String name = userInputNextLine();
-		Client cli = new Client(this, s, name);
+		cli = new Client(this, s, name);
 	}
 
 	private Socket connect() {
