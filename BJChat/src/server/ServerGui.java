@@ -97,6 +97,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		whole.add(vertical);
 		whole.add(Box.createHorizontalStrut(10));
 		
+		input.addKeyListener(this);
 		this.add(whole);
 	}
 	
@@ -108,14 +109,13 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 				Client s = new Client();
 			}
 		};
-		t.start();
+//		t.start();
 	}
 	
 	public WindowListener createWindowListener() {
 		return new WindowListener() {
 			public void windowClosing(WindowEvent e) {
 				// TODO Add Code Here
-				System.out.println("Window Closing");
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {}
@@ -136,7 +136,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == button) {
-			this.println(input.getText());
+			// TODO Actions in Server
 			input.setText("");
 		}
 	}
@@ -150,13 +150,13 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent paramKeyEvent) {}
-
 	@Override
-	public void keyPressed(KeyEvent paramKeyEvent) {
-		actionPerformed(new ActionEvent(button, 0, "Button Pressed"));
+	public void keyPressed(KeyEvent paramKeyEvent) {}
+	@Override
+	public void keyReleased(KeyEvent paramKeyEvent) {
+		if(paramKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+			actionPerformed(new ActionEvent(button, 1, "Button Pressed"));
+		}
 	}
-
-	@Override
-	public void keyReleased(KeyEvent paramKeyEvent) {}
 
 }

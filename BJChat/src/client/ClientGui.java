@@ -1,7 +1,11 @@
 package client;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -9,124 +13,124 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
-public class ClientGui extends JFrame {
+public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	private final static String newLine = "\n";
-	JTextArea chatLog;
-	JTextField clientInput;
-	JButton send;
+	JTextPane console;
+	JTextField input;
+	JButton button;
 	
 	public ClientGui(){
-		super("BJChat");
-		this.setSize(200,200);
-		this.setLocation(500, 200);
+		super("BJ Chat Server");
+		this.setLocation(300, 100);
+		this.setSize(700, 600);
+		this.addWindowListener(createWindowListener());
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setupGui();
 		this.setVisible(true);
 	}
 
-	private void setupGui() {
+	public void setupGui() {
+		input = new JTextField();
+		console = new JTextPane();
+		button = new JButton("Send");
 		
-		Box first = new Box(BoxLayout.Y_AXIS);
-		chatLog = new JTextArea();
-		chatLog.setEditable(false);
-		first.add(chatLog);
-		first.setVisible(true);
+		button.addActionListener(this);
 		
-		Box second = new Box(BoxLayout.X_AXIS);
-		clientInput = new JTextField();
-		clientInput.setEditable(true);
-		second.add(clientInput);
+		console.setEditable(false);
+		console.setPreferredSize(new Dimension(100, this.getHeight() - 100));
+		console.setBackground(Color.WHITE);
 		
-		send = new JButton("send");
-		send.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-			getMessage();
-			}
-			
-		});
-		second.add(send);
-		second.setVisible(true);
+		Box vertical = Box.createVerticalBox();
+		Box bottom = Box.createHorizontalBox();
+		Box whole = Box.createHorizontalBox();
+		Box stream = Box.createVerticalBox();
 		
-		this.add(first);
-		this.add(second);
+		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
+		stream.add(new JLabel("Server Console"));
+		stream.add(Box.createVerticalStrut(10));
+		stream.add(consolePane);
 		
-		this.addWindowListener(new WindowListener(){
-
-			@Override
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				sendCloseReport();
-			}
-
-
-			@Override
-			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			
-		});
+		vertical.add(Box.createVerticalStrut(20));
+		vertical.add(consolePane);
+		vertical.add(Box.createVerticalStrut(10));
+		vertical.add(bottom);
+		vertical.add(Box.createVerticalStrut(10));
+		
+		bottom.add(input);
+		bottom.add(Box.createHorizontalStrut(10));
+		bottom.add(button);
 		
 		
+		whole.add(Box.createHorizontalStrut(10));
+		whole.add(vertical);
+		whole.add(Box.createHorizontalStrut(10));
+		
+		input.addKeyListener(this);
+		this.add(whole);
 	}
 	
-	protected void sendCloseReport() {
-		
-		
+	public void println(String message) {
+		console.setText(console.getText() + message + "\n");
 	}
 
 	public void setName(String name){
 		this.setTitle(name + "'s BJChat");
 	}
 	
-	public void addText(String text){
-		chatLog.append(text + newLine);
+	public WindowListener createWindowListener() {
+		return new WindowListener() {
+			public void windowClosing(WindowEvent e) {
+				// TODO Add Code Here
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {}
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			@Override
+			public void windowOpened(WindowEvent e) {}
+		};
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent paramActionEvent) {
+		if(paramActionEvent.getSource() == button) {
+			// TODO Send text to client
+			input.setText("");
+		}
 	}
 	
 	public static void main(String[] args0){
 		ClientGui p = new ClientGui();
 	}
-	public String getMessage(){
-		String message = clientInput.getText();
-		//clear field here
-		return message;
-		
+
+	@Override
+	public void keyTyped(KeyEvent paramKeyEvent) {}
+
+	@Override
+	public void keyPressed(KeyEvent paramKeyEvent) {
+		println("key pressed");
+		if(paramKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+			actionPerformed(new ActionEvent(button, 1, "Button Pressed"));
+		}
 	}
+
+	@Override
+	public void keyReleased(KeyEvent paramKeyEvent) {}
 	
 	
 
