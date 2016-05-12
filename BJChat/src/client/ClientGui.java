@@ -24,9 +24,11 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	JTextPane console;
 	JTextField input;
 	JButton button;
+	Client cli;
 	
-	public ClientGui(){
+	public ClientGui(Client cli){
 		super("BJ Chat Server");
+		this.cli = cli;
 		this.setLocation(300, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());
@@ -110,6 +112,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent paramActionEvent) {
 		if(paramActionEvent.getSource() == button) {
 			// TODO Send text to client
+			cli.sendLine(input.getText());
 			input.setText("");
 		}
 	}
@@ -123,7 +126,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent paramKeyEvent) {
-		println("key pressed");
 		if(paramKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
 			actionPerformed(new ActionEvent(button, 1, "Button Pressed"));
 		}
