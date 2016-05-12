@@ -15,11 +15,12 @@ public class Client extends Thread {
 	Scanner fromServer;
 	PrintStream toServer;
 	String userName;
+	ClientGui gui;
 	
 	boolean running;
 	
 	
-	public Client(int port) {
+	public Client(int port, ClientGui gui) {
 		InetAddress serverAddress = null;
 		userInput = new Scanner(System.in);
 		// get address
@@ -47,7 +48,7 @@ public class Client extends Thread {
 	}
 	
 	public Client() {
-		this(defaultPort);
+		this(defaultPort, null);
 	}
 	
 	@Override
@@ -65,6 +66,10 @@ public class Client extends Thread {
 			String line = userInput.nextLine();
 			toServer.println(userName + ": " + line);
 		}
+	}
+	
+	public void sendLine(String message) {
+		// TODO
 	}
 	
 	public static void main(String[] args) {

@@ -26,7 +26,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	JButton button;
 	Client cli;
 	
-	public ClientGui(Client cli){
+	public ClientGui(){
 		super("BJ Chat Server");
 		this.cli = cli;
 		this.setLocation(300, 100);
