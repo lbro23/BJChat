@@ -22,6 +22,7 @@ public class Client extends Thread {
 	public Client(int port, ClientGui gui) {
 		InetAddress serverAddress = null;
 		// get address
+		recentInput = "";
 		while(socket == null) {
 			try {
 				gui.println("Type desired Server Address, then press ENTER");
@@ -68,10 +69,6 @@ public class Client extends Thread {
 	
 	public void sendLine(String message) {
 		recentInput = message;
-	}
-	
-	public static void main(String[] args) {
-		Client c = new Client();
 	}
 	
 	public String userInputNextLine() {
