@@ -28,13 +28,13 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	
 	public ClientGui(){
 		super("BJ Chat Server");
-		this.cli = cli;
 		this.setLocation(300, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setupGui();
 		this.setVisible(true);
+		Client cli = new Client(4445, this);
 	}
 
 	public void setupGui() {
