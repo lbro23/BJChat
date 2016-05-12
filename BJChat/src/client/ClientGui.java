@@ -8,6 +8,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.PrintStream;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,6 +31,8 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	JTextField input;
 	JButton button;
 	Client cli;
+	String recentInput = "";
+	int port = 4445;
 	
 	public ClientGui(){
 		super("BJ Chat Server");
@@ -34,7 +42,42 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setupGui();
 		this.setVisible(true);
-		Client cli = new Client(4445, this);
+		Socket s = this.connect();
+		Client cli = new Client(this, s);
+	}
+
+	private Socket connect() {
+		InetAddress serverAddress = null;
+		// get address
+		Socket socket = null;
+		while(socket == null) {
+			try {
+				this.println("Type desired Server Address, then press ENTER");
+				serverAddress = InetAddress.getByName(userInputNextLine());
+				socket = new Socket(serverAddress, port);
+				
+			} catch(UnknownHostException e) {
+				this.println("Invalid Host Name! Please Try Again");
+			} catch(ConnectException e) {
+				this.println("No Server Found! Is the address correct?");
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return socket;
+	}
+
+	private String userInputNextLine() {
+		while(recentInput.equals("")) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		String result = recentInput;
+		recentInput = "";
+		return result;
 	}
 
 	public void setupGui() {
@@ -112,7 +155,10 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public void actionPerformed(ActionEvent paramActionEvent) {
 		if(paramActionEvent.getSource() == button) {
 			// TODO Send text to client
-			cli.sendLine(input.getText());
+			if(cli != null){
+				cli.sendLine(input.getText());
+			}
+			recentInput = input.getText();
 			input.setText("");
 		}
 	}

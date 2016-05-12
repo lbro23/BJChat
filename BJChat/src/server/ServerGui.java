@@ -101,7 +101,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		this.add(whole);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args0) {
 		ServerGui gui = new ServerGui();
 		
 		Thread t = new Thread() { 
