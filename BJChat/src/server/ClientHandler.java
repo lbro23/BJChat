@@ -12,6 +12,7 @@ public class ClientHandler implements Runnable {
 	boolean running; // used to stop infinite loop
 	
 	public ClientHandler(Server server, User user) {
+		running = true;
 		this.user = user;
 		this.server = server;
 	}
@@ -23,8 +24,20 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 		while(running) {
-			if(user.getInputStream().hasNext()) {
-				// TODO Message received from client
+			String message = user.getInput().nextLine();
+			if(message.contains("\\")) {
+				int slashLoc = message.indexOf('\\');
+				int commandEnd =  message.indexOf(' ', slashLoc+1);
+				String command;
+				if(commandEnd == -1) {
+					command = message.substring(slashLoc+1);
+				} else {
+					command = message.substring(slashLoc+1,commandEnd);
+				}
+				server.sayToAllClients("[COMMAND] CID " + user.getID() + ": " + command);
+				// message has '\', its a command
+			} else {
+				server.sayToAllClients(message);
 			}
 		}
 	}

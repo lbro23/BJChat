@@ -17,18 +17,18 @@ public class User {
 	Scanner inputFromClient;
 	
 	
-	public User(Socket socket, String name, int id) {
+	public User(Socket socket, String name, Scanner input, int id) {
 		// first time initialization
 		if(allUsers == null) {
 			allUsers = new ArrayList<User>();
 		}
+		this.inputFromClient = input;
 		this.socket = socket;
 		this.name = name;
 		this.id = id;
 
 		try {
 			outputToClient = new PrintStream(socket.getOutputStream());
-			inputFromClient = new Scanner(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +49,7 @@ public class User {
 	}
 	
 	public PrintStream getOutputStream() { return outputToClient; }
-	public Scanner getInputStream() { return inputFromClient; }
+	public Scanner getInput() { return inputFromClient; }
 	
 	public String getName() { return name; }
 	public int getID() { return id; }
@@ -67,6 +67,10 @@ public class User {
 			}
 		}
 		return null;
+	}
+	
+	public static String findNameById(int id) {
+		return findUser(id).getName();
 	}
 	
 	
