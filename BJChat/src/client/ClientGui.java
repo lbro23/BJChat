@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,7 +32,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	JTextField input;
 	JButton button;
 	Client cli;
-	String recentInput;
 	int port = 4445;
 	
 	public ClientGui(){
@@ -43,20 +43,18 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		setupGui();
 		this.setVisible(true);
 		Socket s = connect();
-		this.println("Type desired username, then press ENTER");
-		String name = userInputNextLine();
+		String name = JOptionPane.showInputDialog(null, "Input Desired Username");
 		cli = new Client(this, s, name);
 	}
 
 	private Socket connect() {
 		InetAddress serverAddress = null;
 		// get address
-		recentInput = "";
 		Socket sock = null;
 		while(sock == null) {
 			try {
-				this.println("Type desired Server Address, then press ENTER");
-				serverAddress = InetAddress.getByName(userInputNextLine());
+				String s = JOptionPane.showInputDialog(null, "Input Valid Server Address");
+				serverAddress = InetAddress.getByName(s);
 				sock = new Socket(serverAddress, port);
 				
 			} catch(UnknownHostException e) {
@@ -68,20 +66,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 		return sock;
-	}
-
-	private String userInputNextLine() {
-		String result;
-		while(recentInput.equals("")){
-			try{
-			Thread.sleep(1);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		result = recentInput;
-		recentInput = "";
-		return result;
 	}
 
 	public void setupGui() {
@@ -129,10 +113,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public void println(String message) {
 		console.setText(console.getText() + message + "\n");
 	}
-
-	public void setName(String name){
-		this.setTitle(name + "'s BJChat");
-	}
 	
 	public WindowListener createWindowListener() {
 		return new WindowListener() {
@@ -158,10 +138,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	@Override
 	public void actionPerformed(ActionEvent paramActionEvent) {
 		if(paramActionEvent.getSource() == button) {
-			// TODO Send text to client
-			if(cli!= null)
-				cli.sendLine(input.getText());
-			recentInput = input.getText();
+			cli.sendLine(input.getText());
 			input.setText("");
 		}
 	}

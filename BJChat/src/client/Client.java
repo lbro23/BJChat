@@ -9,18 +9,19 @@ import java.util.Scanner;
 
 public class Client extends Thread {
 	static int defaultPort = 4445;
-	String recentInput;
 	Socket socket;
 	Scanner fromServer;
 	PrintStream toServer;
 	String userName;
 	ClientGui gui;
 	
+	String input;
+	boolean newInput;
 	boolean running;
 	
 	// PRECONDITION: s must be an open socket with the host
 	public Client(ClientGui gui, Socket s, String name) {
-		recentInput = "";
+		running = true;
 		socket = s;
 		try {
 			toServer = new PrintStream(socket.getOutputStream());
@@ -28,7 +29,7 @@ public class Client extends Thread {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+		this.gui = gui;
 		this.userName = name;
 		toServer.println(userName);
 		this.start();
@@ -46,25 +47,19 @@ public class Client extends Thread {
 		t.start();
 		
 		while(running) {
-			String line = userInputNextLine();
-			toServer.println(userName + ": " + line);
+			if(newInput) {
+				toServer.println(userName + ": " + input);
+				input = "";
+				newInput = false;
+			}
+			
+			try{ Thread.sleep(1); }
+			catch(Exception e) {e.printStackTrace();}
 		}
 	}
 	
 	public void sendLine(String message) {
-		recentInput = message;
-	}
-	
-	public String userInputNextLine() {
-		while(recentInput.equals("")) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		String result = recentInput;
-		recentInput = "";
-		return result;
+		input = message;
+		newInput = true;
 	}
 }
