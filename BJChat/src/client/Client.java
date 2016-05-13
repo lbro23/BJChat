@@ -123,7 +123,22 @@ public class Client extends Thread {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if(eq(cmd[0], "ping")) {
+		}else if (eq(cmd[0], "kick")){
+			try{
+			toServer.println("\\disconnect");
+			fromServer.close();
+			toServer.close();
+			socket.close();
+			
+			gui.println("Disconnected");
+			dead = true;
+			gui.kicked();
+			gui.closeWindow();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		else if(eq(cmd[0], "ping")) {
 			if(user) {
 				pingServer();
 			} else {

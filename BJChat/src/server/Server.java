@@ -130,6 +130,18 @@ public class Server extends Thread{
 		} else if(eq(cmd[0], "killclient")) {
 			ClientHandler u = findByName(cmd[1]);
 			u.sayToClient("\\kill");
+		} else if(eq(cmd[0], "kick")){
+			String name = "";
+			for(int i = 1; i<cmd.length-1;i++){
+				name+= cmd[i] + " ";
+			}
+			name+=cmd[cmd.length-1];
+			ClientHandler c = findByName(name);
+			if(c!= null){
+				c.sayToClient("\\kick");
+				sayToAllClients("<SERVER> has kicked " + name);
+				removeUser(c);
+			}
 		}
 		//sayToAllClients("\\" + cmd[0]);
 	}
