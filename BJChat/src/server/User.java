@@ -12,6 +12,7 @@ public class User {
 	Socket socket;
 	String name;
 	int id;
+	boolean administrator;
 	
 	PrintStream outputToClient;
 	Scanner inputFromClient;

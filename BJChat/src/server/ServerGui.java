@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -67,6 +69,8 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		consolePane.getVerticalScrollBar().addAdjustmentListener(createAdjListener());
+		
 		JScrollPane userPane = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
@@ -139,6 +143,14 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		currentText += message + "\n";
 		console.setText(currentText);
 		//console.update(this.getGraphics());
+	}
+	
+	public AdjustmentListener createAdjListener() {
+		return new AdjustmentListener() {  
+	        public void adjustmentValueChanged(AdjustmentEvent e) {  
+	            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+	        }
+	    };
 	}
 
 	@Override
