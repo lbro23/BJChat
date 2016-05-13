@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -95,7 +97,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		consolePane.setAutoscrolls(true);
+		consolePane.getVerticalScrollBar().addAdjustmentListener(createAdjListener());
 		
 		stream.add(new JLabel("Server Console"));
 		stream.add(Box.createVerticalStrut(10));
@@ -159,6 +161,14 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			cli.sendLine(input.getText());
 			input.setText("");
 		}
+	}
+	
+	public AdjustmentListener createAdjListener() {
+		return new AdjustmentListener() {  
+	        public void adjustmentValueChanged(AdjustmentEvent e) {  
+	            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+	        }
+	    };
 	}
 
 	@Override
