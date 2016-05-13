@@ -64,9 +64,7 @@ public class Client extends Thread {
 		while(running) {
 			if(newInput) {
 				// check and execute any commands
-				if(handleCommand(input, true)) {
-					toServer.println(userName + ": " + input);
-				}
+				toServer.println(userName + ": " + newInput);
 				input = null;
 				newInput = false;
 			}
@@ -86,8 +84,10 @@ public class Client extends Thread {
 	}
 	
 	public void sendLine(String message) {
-		input = message;
-		newInput = true;
+		if(handleCommand(message, true)) {
+			input = message;
+			newInput = true;
+		}
 	}
 	
 	/**
@@ -142,6 +142,12 @@ public class Client extends Thread {
 				toServer.println("\\" + cmd[0] + " " + cmd[1]);
 			} else {
 				gui.println("Incorrect Command Format: Try \\changename NEWNAME");
+			}
+		} else if(eq(cmd[0], "clean")) {
+			if(user) {
+				gui.cleanConsole("Console Cleaned" );
+			} else {
+				gui.cleanConsole("Console Cleaned: Server Command");
 			}
 		}
 	}

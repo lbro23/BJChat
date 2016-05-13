@@ -43,7 +43,9 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		setupGui();
 		this.setVisible(true);
 		Socket s = connect();
+		if(s == null) return;
 		String name = JOptionPane.showInputDialog(null, "Input Desired Username");
+		if(name == "" || name == null) { name = s.getLocalAddress().getHostName().substring(0, 11); }
 		cli = new Client(this, s, name);
 	}
 
@@ -54,13 +56,20 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		while(sock == null) {
 			try {
 				String s = JOptionPane.showInputDialog(null, "Input Valid Server Address");
+				if(s == null || s.equals("")) {
+					if(JOptionPane.showConfirmDialog(null, "Empty Input Received. Close?") == 0) {
+						closeWindow();
+						break;
+					}
+					
+				}
 				serverAddress = InetAddress.getByName(s);
 				sock = new Socket(serverAddress, port);
 				
 			} catch(UnknownHostException e) {
 				this.println("Invalid Host Name! Please Try Again");
 			} catch(ConnectException e) {
-				this.println("No Server Found! Is the address correct?");
+				this.println("No Server Found! Is the address correct? ");
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -114,6 +123,8 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public void println(String message) {
 		console.setText(console.getText() + message + "\n");
 	}
+	
+	public void cleanConsole(String message) { console.setText(message); }
 	
 	public void closeWindow() { setVisible(false); dispose(); }
 	
