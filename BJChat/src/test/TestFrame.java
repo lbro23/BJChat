@@ -24,7 +24,7 @@ public class TestFrame extends JFrame implements ActionListener{
 		Box b = Box.createHorizontalBox(); 
 		
 		b.add(client);
-		b.add(Box.createHorizontalStrut(10));
+		b.add(Box.createHorizontalStrut(10)); 
 		b.add(server);
 	
 		this.add(b);

@@ -127,6 +127,9 @@ public class Server extends Thread{
 			refreshPing();
 			try{ Thread.sleep(1000); } catch(Exception e) {e.printStackTrace(); }
 			updateUsers();
+		} else if(eq(cmd[0], "killclient")) {
+			ClientHandler u = findByName(cmd[1]);
+			u.sayToClient("\\kill");
 		}
 		//sayToAllClients("\\" + cmd[0]);
 	}
@@ -141,6 +144,15 @@ public class Server extends Thread{
 	
 	public void setAdminPassword(String message) {
 		adminPassword = message;
+	}
+	
+	public ClientHandler findByName(String id) {
+		for(ClientHandler c: clients) {
+			if(c.getUser().getName().equals(id)) {
+				return c;
+			}
+		}
+		return null;
 	}
 	
 	/**

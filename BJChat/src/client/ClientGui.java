@@ -94,7 +94,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		
 		users.setEditable(false);
 		users.setPreferredSize(new Dimension(50, this.getHeight() - 100));
-		users.setBackground(Color.GRAY);
+		users.setBackground(Color.LIGHT_GRAY);
 		
 		Box vertical = Box.createVerticalBox();
 		Box bottom = Box.createHorizontalBox();
