@@ -162,4 +162,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	@Override
 	public void keyReleased(KeyEvent paramKeyEvent) {}
 
+	public static void main(String[] args0){
+		ClientGui cli = new ClientGui();
+	}
 }
