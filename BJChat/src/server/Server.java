@@ -87,6 +87,7 @@ public class Server extends Thread{
 				c.sayToClient(muggle);
 			}
 		}
+		gui.updateUsers(admin);
 	}
 	
 	public String getUsers(boolean administrator) {
@@ -96,11 +97,38 @@ public class Server extends Thread{
 			result += user.getName();
 			if(administrator) {
 				result += " (" + user.getHostName() + ") ";
-				result += "Ping: " + user.getMostRecentPing();
+				if(user.getMostRecentPing() == 9999) {
+					result += "Ping: TIMEOUT";
+				} else {
+					result += "Ping: " + user.getMostRecentPing();
+				}
 			}
-			result += "|";
+			result += "//";
 		}
 		return result;
+	}
+	
+	public void sendCommand(String cmd) {
+		if(!(cmd.contains("\\"))) {
+			sayToAllClients("<SERVER> " + cmd);
+		} else {
+			executeCommand(cmd.substring(1).split(" "));
+		}
+	}
+	
+	public void refreshPing() {
+		for(ClientHandler c: clients) {
+			c.updatePing();
+		}
+	}
+	
+	public void executeCommand(String[] cmd) {
+		if(eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
+			refreshPing();
+			try{ Thread.sleep(1000); } catch(Exception e) {e.printStackTrace(); }
+			updateUsers();
+		}
+		//sayToAllClients("\\" + cmd[0]);
 	}
 	
 	public void removeUser(ClientHandler c) {
@@ -113,5 +141,12 @@ public class Server extends Thread{
 	
 	public void setAdminPassword(String message) {
 		adminPassword = message;
+	}
+	
+	/**
+	 * Equals to ignore case
+	 */
+	public boolean eq(String s1, String s2) {
+		return s1.compareToIgnoreCase(s2) == 0;
 	}
 }

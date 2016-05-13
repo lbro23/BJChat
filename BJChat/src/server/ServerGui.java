@@ -133,7 +133,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == button) {
-			// TODO Actions in Server
+			server.sendCommand(input.getText());
 			input.setText("");
 		}
 	}
@@ -143,6 +143,15 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		currentText += message + "\n";
 		console.setText(currentText);
 		//console.update(this.getGraphics());
+	}
+	
+	public void updateUsers(String cmd) {
+		cmd = cmd.substring(11);
+		String[] userNames = cmd.split("//");
+		users.setText("");
+		for(int i =0; i<userNames.length; i++){
+			users.setText(users.getText() + userNames[i] + "\n");;
+		}
 	}
 	
 	public AdjustmentListener createAdjListener() {

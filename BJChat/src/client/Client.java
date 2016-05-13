@@ -156,7 +156,7 @@ public class Client extends Thread {
 	}
 	
 	public void updateUsers(String names) {
-		gui.updateUserPane(names.split("|"));
+		gui.updateUserPane(names.split("//"));
 	}
  
 	public void pingServer() {

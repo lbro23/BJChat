@@ -9,8 +9,12 @@ import java.util.NoSuchElementException;
  *
  */
 public class ClientHandler implements Runnable {
+	static final int PING_TIMEOUT = 9999;
 	User user;
 	Server server;
+	
+	boolean awaitingPingResponse;
+	long pingStartTime;
 	
 	boolean running; // used to stop infinite loop
 	
@@ -35,6 +39,10 @@ public class ClientHandler implements Runnable {
 					executeCommand(cmd);
 				} else {
 					server.sayToAllClients(message);
+				}
+				if(awaitingPingResponse) {
+					long timeElapsed = System.currentTimeMillis() - pingStartTime;
+					if(timeElapsed > PING_TIMEOUT) { user.setMostRecentPing(9999); }
 				}
 			}
 		} catch (NoSuchElementException e) {}
@@ -68,6 +76,12 @@ public class ClientHandler implements Runnable {
 			String old = user.getName();
 			user.changeName(cmd[1]);
 			server.sayToAllClients(old + " has changed their name to " + cmd[1]);
+			server.updateUsers();
+		} else if(eq(cmd[0], "pingresponse")) {
+			if(awaitingPingResponse) {
+				awaitingPingResponse = false;
+				long timeElapsed = System.currentTimeMillis() - pingStartTime;
+			}
 		}
 	}
 	
@@ -80,6 +94,11 @@ public class ClientHandler implements Runnable {
 	
 	public User getUser() {
 		return user;
+	}
+	
+	public void updatePing() {
+		pingStartTime = System.currentTimeMillis();
+		awaitingPingResponse = true;
 	}
 	
 
