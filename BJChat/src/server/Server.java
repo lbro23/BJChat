@@ -16,6 +16,7 @@ public class Server extends Thread{
 	ArrayList<ClientHandler> clients;
 	ServerGui gui;
 	boolean running;
+	String adminPassword = "default";
 	// hello
 	
 	public Server(int port, ServerGui gui) {
@@ -77,5 +78,9 @@ public class Server extends Thread{
 	
 	public void sayToConsole(String message) {
 		gui.println(message);
+	}
+	
+	public void setAdminPassword(String message) {
+		adminPassword = message;
 	}
 }

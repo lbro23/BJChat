@@ -8,6 +8,8 @@ import java.net.UnknownHostException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import javax.swing.text.html.HTML;
+
 public class Client extends Thread {
 	static int defaultPort = 4445;
 	public boolean dead;
@@ -64,7 +66,7 @@ public class Client extends Thread {
 		while(running) {
 			if(newInput) {
 				// check and execute any commands
-				toServer.println(userName + ": " + input);
+				toServer.println("[" + userName + "]: " + input);
 				input = null;
 				newInput = false;
 			}
