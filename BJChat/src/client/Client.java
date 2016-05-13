@@ -64,7 +64,7 @@ public class Client extends Thread {
 		while(running) {
 			if(newInput) {
 				// check and execute any commands
-				toServer.println("<b>" + userName + "<b>: " + input);
+				toServer.println("<b>" + userName + "</b>: " + input);
 				input = null;
 				newInput = false;
 			}
