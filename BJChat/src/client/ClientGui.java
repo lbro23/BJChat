@@ -86,6 +86,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		consolePane.setAutoscrolls(true);
 		
 		stream.add(new JLabel("Server Console"));
 		stream.add(Box.createVerticalStrut(10));
