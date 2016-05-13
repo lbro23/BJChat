@@ -13,6 +13,8 @@ public class User {
 	String name;
 	int id;
 	boolean administrator = false;
+	int ping;
+	String hostName;
 	
 	PrintStream outputToClient;
 	Scanner inputFromClient;
@@ -25,6 +27,7 @@ public class User {
 		}
 		this.inputFromClient = input;
 		this.socket = socket;
+		hostName = socket.getInetAddress().getHostName();
 		this.name = name;
 		this.id = id;
 
@@ -53,10 +56,16 @@ public class User {
 	public Scanner getInput() { return inputFromClient; }
 	
 	public String getName() { return name; }
+	public String getHostName() { return hostName; }
 	public int getID() { return id; }
 	public Socket getSocket() { return socket; }
 	public boolean isAdmin() { return administrator; };
+	public int getMostRecentPing() { return ping; }
+	
+	public void makeAdmin() { administrator = true; };
+	public void revokeAdmin() { administrator = false; };
 	public void changeName(String name) { this.name = name; }
+	public void setMostRecentPing(int ping) { this.ping = ping; }
 	
 	/**
 	 * Find the user with the given id

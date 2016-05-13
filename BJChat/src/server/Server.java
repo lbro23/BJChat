@@ -60,6 +60,7 @@ public class Server extends Thread{
 				
 				gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
 				sayToAllClients(name + " has joined the server");
+				updateUsers();
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -74,6 +75,36 @@ public class Server extends Thread{
 		for(ClientHandler c: clients) {
 			c.sayToClient(message);
 		}
+	}
+	
+	public void updateUsers() {
+		String admin = getUsers(true);
+		String muggle = getUsers(false);
+		for(ClientHandler c: clients) {
+			if(c.getUser().isAdmin()) {
+				c.sayToClient(admin);
+			} else {
+				c.sayToClient(muggle);
+			}
+		}
+	}
+	
+	public String getUsers(boolean administrator) {
+		String result = "\\userupdate ";
+		for(ClientHandler c: clients) {
+			User user = c.getUser();
+			result += user.getName();
+			if(administrator) {
+				result += " (" + user.getHostName() + ") ";
+				result += "Ping: " + user.getMostRecentPing();
+			}
+			result += "|";
+		}
+		return result;
+	}
+	
+	public void removeUser(ClientHandler c) {
+		clients.remove(c);
 	}
 	
 	public void sayToConsole(String message) {

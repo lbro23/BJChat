@@ -205,7 +205,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public void updateUserPane(String[] userNames){
 		users.setText("");
 		for(int i =0; i<userNames.length; i++){
-		users.setText(users.getText() + userNames[i] + "\n");;
+			users.setText(users.getText() + userNames[i] + "\n");;
 		}
 	}
 

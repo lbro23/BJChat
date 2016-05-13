@@ -54,6 +54,8 @@ public class ClientHandler implements Runnable {
 	public void close() {
 		running = false;
 		user.close();
+		server.removeUser(this);
+		server.updateUsers();
 	}
 	
 	public void executeCommand(String[] cmd) {
@@ -76,8 +78,9 @@ public class ClientHandler implements Runnable {
 		return s1.compareToIgnoreCase(s2) == 0;
 	}
 	
-	
-	
+	public User getUser() {
+		return user;
+	}
 	
 
 }
