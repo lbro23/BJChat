@@ -1,4 +1,7 @@
 package server;
+
+import java.util.NoSuchElementException;
+
 /**
  * This class will listen to the input stream from this client and be responsible for
  * soliciting a response from the server to this client
@@ -23,23 +26,18 @@ public class ClientHandler implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while(running) {
-			String message = user.getInput().nextLine();
-			if(message.contains("\\")) {
-				int slashLoc = message.indexOf('\\');
-				int commandEnd =  message.indexOf(' ', slashLoc+1);
-				String command;
-				if(commandEnd == -1) {
-					command = message.substring(slashLoc+1);
+		try{
+			while(running) {
+				String message = user.getInput().nextLine();
+				if(message.contains("\\")) {
+					String[] cmd = message.substring(1).split(" ");
+					server.sayToConsole("[Command Received] " + user.getName() + ": " + cmd[0]);
+					executeCommand(cmd);
 				} else {
-					command = message.substring(slashLoc+1,commandEnd);
+					server.sayToAllClients(message);
 				}
-				server.sayToAllClients("[COMMAND] CID " + user.getID() + ": " + command);
-				// message has '\', its a command
-			} else {
-				server.sayToAllClients(message);
 			}
-		}
+		} catch (NoSuchElementException e) {}
 	}
 	
 	/**
@@ -57,6 +55,22 @@ public class ClientHandler implements Runnable {
 		running = false;
 		user.close();
 	}
+	
+	public void executeCommand(String[] cmd) {
+		if(eq(cmd[0], "disconnect")) {
+			server.sayToAllClients(user.getName() + " has disconnected from the server");
+			close();
+		}
+	}
+	
+	/**
+	 * Equals to ignore case
+	 */
+	public boolean eq(String s1, String s2) {
+		return s1.compareToIgnoreCase(s2) == 0;
+	}
+	
+	
 	
 	
 

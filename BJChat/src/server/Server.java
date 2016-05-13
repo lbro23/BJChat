@@ -74,4 +74,8 @@ public class Server extends Thread{
 			c.sayToClient(message);
 		}
 	}
+	
+	public void sayToConsole(String message) {
+		gui.println(message);
+	}
 }

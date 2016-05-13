@@ -114,10 +114,16 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		console.setText(console.getText() + message + "\n");
 	}
 	
+	public void closeWindow() { setVisible(false); dispose(); }
+	
 	public WindowListener createWindowListener() {
 		return new WindowListener() {
 			public void windowClosing(WindowEvent e) {
-				// TODO Add Code Here
+				if(!cli.dead) {
+					cli.sendLine("\\kill");
+				}
+				try{ Thread.sleep(1000); }
+				catch(Exception p) {p.printStackTrace();}
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {}
@@ -142,11 +148,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			input.setText("");
 		}
 	}
-	
-	public static void main(String[] args0){
-		ServerGui s = new ServerGui();
-		ClientGui p = new ClientGui();
-	}
 
 	@Override
 	public void keyTyped(KeyEvent paramKeyEvent) {}
@@ -161,6 +162,11 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	@Override
 	public void keyReleased(KeyEvent paramKeyEvent) {}
 	
+	
+	public static void main(String[] args0){
+		ServerGui s = new ServerGui();
+		ClientGui p = new ClientGui();
+	}
 	
 
 }
