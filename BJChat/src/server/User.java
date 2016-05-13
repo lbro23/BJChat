@@ -54,6 +54,7 @@ public class User {
 	public String getName() { return name; }
 	public int getID() { return id; }
 	public Socket getSocket() { return socket; }
+	public void changeName(String name) { this.name = name; }
 	
 	/**
 	 * Find the user with the given id

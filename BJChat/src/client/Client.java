@@ -135,6 +135,13 @@ public class Client extends Thread {
 				int timeElapsed = (int)(System.currentTimeMillis() - pingStartTime);
 				gui.println("Ping " + socket.getInetAddress().getHostName() + ", Result: " + timeElapsed);
 			}
+		} else if(eq(cmd[0], "changename")) {
+			if(cmd.length == 2) {
+				userName = cmd[1];
+				toServer.println("\\" + cmd[0] + " " + cmd[1]);
+			} else {
+				gui.println("Incorrect Command Format: Try \\changename NEWNAME");
+			}
 		}
 	}
 	

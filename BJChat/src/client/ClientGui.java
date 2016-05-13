@@ -36,7 +36,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	
 	public ClientGui(){
 		super("BJ Chat");
-		this.setLocation(300, 100);
+		this.setLocation(700, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -161,12 +161,5 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent paramKeyEvent) {}
-	
-	
-	public static void main(String[] args0){
-		ServerGui s = new ServerGui();
-		ClientGui p = new ClientGui();
-	}
-	
 
 }
