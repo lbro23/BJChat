@@ -12,7 +12,7 @@ public class User {
 	Socket socket;
 	String name;
 	int id;
-	boolean administrator;
+	boolean administrator = false;
 	
 	PrintStream outputToClient;
 	Scanner inputFromClient;
@@ -55,6 +55,7 @@ public class User {
 	public String getName() { return name; }
 	public int getID() { return id; }
 	public Socket getSocket() { return socket; }
+	public boolean isAdmin() { return administrator; };
 	public void changeName(String name) { this.name = name; }
 	
 	/**
