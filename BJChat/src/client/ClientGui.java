@@ -34,6 +34,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	JTextField input;
 	JButton button;
 	Client cli;
+	JTextPane users;
 	int port = 4445;
 	
 	public ClientGui(){
@@ -83,6 +84,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		input = new JTextField();
 		console = new JTextPane();
 		button = new JButton("Send");
+		users = new JTextPane();
 		
 		button.addActionListener(this);
 		
@@ -90,18 +92,32 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		console.setPreferredSize(new Dimension(100, this.getHeight() - 100));
 		console.setBackground(Color.WHITE);
 		
+		users.setEditable(false);
+		users.setPreferredSize(new Dimension(50, this.getHeight() - 100));
+		users.setBackground(Color.GRAY);
+		
 		Box vertical = Box.createVerticalBox();
 		Box bottom = Box.createHorizontalBox();
 		Box whole = Box.createHorizontalBox();
 		Box stream = Box.createVerticalBox();
+		Box clients = Box.createVerticalBox();
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		consolePane.getVerticalScrollBar().addAdjustmentListener(createAdjListener());
 		
+		JScrollPane userPane = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		clients.add(new JLabel("Connected Users"));
+		clients.add(Box.createVerticalStrut(10));
+		clients.add(userPane);
+		
 		stream.add(new JLabel("Server Console"));
 		stream.add(Box.createVerticalStrut(10));
 		stream.add(consolePane);
+		stream.add(Box.createHorizontalStrut(10));
+		
 		
 		vertical.add(Box.createVerticalStrut(20));
 		vertical.add(consolePane);
@@ -116,6 +132,8 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		
 		whole.add(Box.createHorizontalStrut(10));
 		whole.add(vertical);
+		whole.add(Box.createHorizontalStrut(10));
+		whole.add(clients);
 		whole.add(Box.createHorizontalStrut(10));
 		
 		input.addKeyListener(this);
@@ -183,6 +201,13 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent paramKeyEvent) {}
+	
+	public void updateUserPane(String[] userNames){
+		users.setText("");
+		for(int i =0; i<userNames.length; i++){
+		users.setText(users.getText() + userNames[i] + "\n");;
+		}
+	}
 
 	public static void main(String[] args0){
 		ClientGui cli = new ClientGui();

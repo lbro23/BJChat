@@ -149,9 +149,15 @@ public class Client extends Thread {
 			} else {
 				gui.cleanConsole("Console Cleaned: Server Command");
 			}
+		} else if(eq(cmd[0], "userupdate")){
+			updateUsers(cmd[1]);
 		}
 	}
 	
+	public void updateUsers(String names) {
+		gui.updateUserPane(names.split("|"));
+	}
+
 	public void pingServer() {
 		toServer.println("\\ping");
 		pingStartTime = System.currentTimeMillis();
