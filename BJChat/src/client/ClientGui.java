@@ -27,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 import server.ServerGui;
-
+//
 public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	private final static String newLine = "\n";
 	JTextPane console;

@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import javax.swing.text.html.HTML;
-
 public class Client extends Thread {
 	static int defaultPort = 4445;
 	public boolean dead;
