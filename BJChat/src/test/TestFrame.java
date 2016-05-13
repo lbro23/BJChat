@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
+// RUN TEST TO CREATE CLIENTS AND SERVERS
 public class TestFrame extends JFrame implements ActionListener{
 	JButton client, server;
 	
@@ -21,7 +21,7 @@ public class TestFrame extends JFrame implements ActionListener{
 		server = new JButton("New Server");
 		server.addActionListener(this);
 		
-		Box b = Box.createHorizontalBox();
+		Box b = Box.createHorizontalBox(); 
 		
 		b.add(client);
 		b.add(Box.createHorizontalStrut(10));
