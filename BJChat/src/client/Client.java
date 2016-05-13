@@ -135,8 +135,7 @@ public class Client extends Thread {
 			gui.kicked();
 			gui.closeWindow();
 			}catch(Exception e){
-				e.printStackTrace();
-			}
+				e.printStackTrace();			}
 		}
 		else if(eq(cmd[0], "ping")) {
 			if(user) {
