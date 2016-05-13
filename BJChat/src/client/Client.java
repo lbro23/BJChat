@@ -132,6 +132,7 @@ public class Client extends Thread {
 			if(user) {
 				gui.println("Incorrect Command: Did you mean \\ping?");
 			} else {
+				awaitingPingResponse = false;
 				int timeElapsed = (int)(System.currentTimeMillis() - pingStartTime);
 				gui.println("Ping " + socket.getInetAddress().getHostName() + ", Result: " + timeElapsed);
 			}
