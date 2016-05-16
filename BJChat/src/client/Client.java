@@ -124,18 +124,28 @@ public class Client extends Thread {
 				e.printStackTrace();
 			}
 		}else if (eq(cmd[0], "kick")){
-			try{
-			toServer.println("\\disconnect");
-			fromServer.close();
-			toServer.close();
-			socket.close();
-			
-			gui.println("Disconnected");
-			dead = true;
-			gui.kicked();
-			gui.closeWindow();
-			}catch(Exception e){
-				e.printStackTrace();			}
+			if(user) {
+				// reconstruct command
+				String command = "";
+				for(int i = 0; i < cmd.length; i++) {
+					command += cmd[i];
+				}
+				toServer.println(command);
+				
+			} else {
+				try{
+				toServer.println("\\disconnect");
+				fromServer.close();
+				toServer.close();
+				socket.close();
+				
+				gui.println("Disconnected");
+				dead = true;
+				gui.kicked();
+				gui.closeWindow();
+				}catch(Exception e){
+					e.printStackTrace();			}
+			}
 		}
 		else if(eq(cmd[0], "ping")) {
 			if(user) {

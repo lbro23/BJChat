@@ -131,19 +131,18 @@ public class Server extends Thread{
 			ClientHandler u = findByName(cmd[1]);
 			u.sayToClient("\\kill");
 		} else if(eq(cmd[0], "kick")){
-			String name = "";
-			for(int i = 1; i<cmd.length-1;i++){
-				name+= cmd[i] + " ";
+			ClientHandler c = findByName(cmd[1]);
+			if(c == null) { gui.println("Invalid Name, Please Try Again" ); }
+			String message = c.getUser().getName() + " has been kicked by <Server>";
+			sayToAllClients(message);
+			if(cmd.length > 2) {
+				message = "";
+				for(int i = 2; i < cmd.length; i++) { // create message
+					message += cmd[i];
+				}
 			}
-			name+=cmd[cmd.length-1];
-			ClientHandler c = findByName(name);
-			if(c!= null){
-				c.sayToClient("\\kick");
-				sayToAllClients("<SERVER> has kicked " + name);
-				removeUser(c);
-			}
+			kickUser(c, message);
 		}
-		//sayToAllClients("\\" + cmd[0]);
 	}
 	
 	public void removeUser(ClientHandler c) {
@@ -156,6 +155,13 @@ public class Server extends Thread{
 	
 	public void setAdminPassword(String message) {
 		adminPassword = message;
+	}
+	
+	public void kickUser(ClientHandler toKick, String message) {
+		if(toKick != null){
+			toKick.sayToClient("\\kick " + message);
+			removeUser(toKick);
+		}
 	}
 	
 	public ClientHandler findByName(String id) {
