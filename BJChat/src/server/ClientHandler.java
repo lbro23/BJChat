@@ -80,33 +80,30 @@ public class ClientHandler implements Runnable {
 		} else if(eq(cmd[0], "pingresponse")) {
 			if(awaitingPingResponse) {
 				awaitingPingResponse = false;
-				long timeElapsed = System.currentTimeMillis() - pingStartTime;
+				user.setMostRecentPing((int)(System.currentTimeMillis() - pingStartTime));
 			}
 		} else if(eq(cmd[0], "admin")){
-			if(eq(cmd[1], server.getAdminPassword())){
+			if(cmd.length != 2) {
+				sayToClient("Incorrect Command Format: Try \\admin ADMINPASSWORD");
+			}else if(eq(cmd[1], server.getAdminPassword())){
 				user.makeAdmin();
-				sayToClient("You are now an admin");
+				sayToClient("You are now a Server Administrator");
 				server.sayToConsole(user.getName() + " is now an admin");
 			}else{
-				sayToClient("Wrong password");
+				sayToClient("Incorrect Password");
 			}
 		} else if(eq(cmd[0], "kick")){
 			if(user.isAdmin()){
-				String name = "";
-				for(int i = 1; i<cmd.length-1;i++){
-					name+= cmd[i] + " ";
-				}
-				name+=cmd[cmd.length-1];
-				ClientHandler c = server.findByName(name);
+				ClientHandler c = server.findByName(cmd[0]);
 				if(c!= null){
 					c.sayToClient("\\kick");
-					server.sayToAllClients(user.getName() + " has kicked " + name);
+					server.sayToAllClients(cmd[0] + " has been kicked by " + user.getName());
 					server.removeUser(c);
 				}else{
-					sayToClient("enter valid user");
+					sayToClient("Invalid User: Try \\kick USERTOKICK");
 				}
 			}else{
-				sayToClient("insuffiecent permission");
+				sayToClient("Insufficient Permission");
 			}
 		}//end kick command
 	}
