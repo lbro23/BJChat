@@ -78,6 +78,7 @@ public class Server extends Thread{
 	}
 	
 	public void updateUsers() {
+		refreshPing();
 		String admin = getUsers(true);
 		String muggle = getUsers(false);
 		for(ClientHandler c: clients) {
@@ -97,11 +98,11 @@ public class Server extends Thread{
 			result += user.getName();
 			if(administrator) {
 				
-				result += ": " + c.getUser().getID() + " (" + user.getHostName() + ") ";
+				result += " (" + user.getHostName() + ")";
 				if(user.getMostRecentPing() == 9999) {
-					result += "Ping: TIMEOUT";
+					result += ":: DC";
 				} else {
-					result += "Ping: " + user.getMostRecentPing();
+					result += ":: " + user.getMostRecentPing();
 				}
 			}
 			result += "//";
