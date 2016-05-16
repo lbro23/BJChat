@@ -100,7 +100,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			}
 			message = "Input New Name and Try Again\n\nName must be beween 2 and 10 characters\nName must only contain letters and numbers";
 		}
-		return "";
+		return name;
 	}
 
 	public void setupGui() {
