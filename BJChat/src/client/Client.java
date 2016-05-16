@@ -136,6 +136,10 @@ public class Client extends Thread {
 				toServer.println(rawCommand);
 			} else {
 				try{
+					String message = "";
+					for(int i= 1; i<cmd.length; i++)
+						message+=cmd[i] + " ";
+					message = message.trim();
 					toServer.println("\\disconnect");
 					fromServer.close();
 					toServer.close();
@@ -143,7 +147,7 @@ public class Client extends Thread {
 					
 					gui.println("Disconnected");
 					dead = true;
-					gui.kicked();
+					gui.kicked(message);
 					gui.closeWindow();
 				}catch(Exception e){ e.printStackTrace(); }
 			}

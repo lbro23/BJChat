@@ -229,8 +229,12 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			users.setText(users.getText() + userNames[i] + "\n");
 		}
 	}
-	public void kicked(){
+	public void kicked(String message){
+		if(message.equals("")){//no message
 		JOptionPane.showMessageDialog( null, "You have been kicked from the server");
+		}else{
+			JOptionPane.showMessageDialog( null, message);
+		}
 	}
 
 	public static void main(String[] args0){
