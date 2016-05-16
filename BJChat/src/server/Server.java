@@ -128,31 +128,30 @@ public class Server extends Thread{
 		if(eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
 			refreshPing();
 			updateUsers();
-		} else if(eq(cmd[0], "updateusers")) {
-			updateUsers();
 		} else if(eq(cmd[0], "killclient")) {
 			ClientHandler u = findByName(cmd[1]);
 			u.sayToClient("\\kill");
 		} else if(eq(cmd[0], "kick")){
-			String name = "";
-			for(int i = 1; i<cmd.length-1;i++){
-				name+= cmd[i] + " ";
-			}
-			name+=cmd[cmd.length-1];
-			ClientHandler c = findByName(name);
+			ClientHandler c = findByName(cmd[1]);
 			if(c!= null){
-				c.sayToClient("\\kick");
-				sayToAllClients("<SERVER> has kicked " + name);
+
+				String message = "";
+				for(int i = 2; i < cmd.length; i++) {
+					message += cmd[i] + " ";
+				}
+				c.sayToClient("\\kick " + message);
+				sayToAllClients("<SERVER> has kicked " + cmd[1]);
+				sayToConsole(cmd[1] + " kicked (" + message + ")");
 				removeUser(c);
 			}else{
 				sayToConsole("enter valid user");
 			}
 		}	else if(eq(cmd[0], "setpassword")){
 				if(cmd.length>2){
-					sayToConsole("enter valid password");
+					sayToConsole("Incorrect Command Format: Try \\setpassword NEWPASSWORD");
 				}else{
 					setAdminPassword(cmd[1]);
-					sayToConsole("password set");
+					sayToConsole("Password Set");
 					}	
 				}
 			}
