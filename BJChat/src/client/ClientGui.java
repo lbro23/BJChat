@@ -109,17 +109,15 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		JScrollPane userPane = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
+		clients.add(Box.createVerticalStrut(5));
 		clients.add(new JLabel("Connected Users"));
 		clients.add(Box.createVerticalStrut(10));
 		clients.add(userPane);
+		clients.add(Box.createVerticalStrut(10));
 		
-		stream.add(new JLabel("Server Console"));
-		stream.add(Box.createVerticalStrut(10));
-		stream.add(consolePane);
-		stream.add(Box.createHorizontalStrut(10));
-		
-		
-		vertical.add(Box.createVerticalStrut(20));
+		vertical.add(Box.createVerticalStrut(5));
+		vertical.add(new JLabel("Chat Stream"));
+		vertical.add(Box.createVerticalStrut(10));
 		vertical.add(consolePane);
 		vertical.add(Box.createVerticalStrut(10));
 		vertical.add(bottom);
