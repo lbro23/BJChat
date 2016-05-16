@@ -98,6 +98,8 @@ public class Client extends Thread {
 	public boolean handleCommand(String rawCommand, boolean user) {
 		if(!user) {
 			if(rawCommand.charAt(0) == '\\') {
+				String[] cmd = rawCommand.substring(1).split(" ");
+				executeCommand(cmd, user, rawCommand);
 				return false;
 			} else {
 				return true;
@@ -175,7 +177,7 @@ public class Client extends Thread {
 			}
 		} else if(eq(cmd[0], "userupdate")){
 			if(!user)
-				updateUsers(cmd[1]);
+				updateUsers(rawCommand.substring(12));
 		} else {
 			if(user) {
 				toServer.println(rawCommand);

@@ -96,7 +96,8 @@ public class Server extends Thread{
 			User user = c.getUser();
 			result += user.getName();
 			if(administrator) {
-				result += " (" + user.getHostName() + ") ";
+				
+				result += ": " + c.getUser().getID() + " (" + user.getHostName() + ") ";
 				if(user.getMostRecentPing() == 9999) {
 					result += "Ping: TIMEOUT";
 				} else {
@@ -125,7 +126,8 @@ public class Server extends Thread{
 	public void executeCommand(String[] cmd) {
 		if(eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
 			refreshPing();
-			try{ Thread.sleep(1000); } catch(Exception e) {e.printStackTrace(); }
+			updateUsers();
+		} else if(eq(cmd[0], "updateusers")) {
 			updateUsers();
 		} else if(eq(cmd[0], "killclient")) {
 			ClientHandler u = findByName(cmd[1]);
