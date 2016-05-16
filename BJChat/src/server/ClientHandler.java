@@ -96,9 +96,8 @@ public class ClientHandler implements Runnable {
 			if(user.isAdmin()){
 				ClientHandler c = server.findByName(cmd[1]);
 				if(c!= null){
+					server.sayToAllClients(cmd[1] + " has been kicked by " + user.getName());
 					c.sayToClient("\\kick");
-					server.sayToAllClients(cmd[0] + " has been kicked by " + user.getName());
-					server.removeUser(c);
 				}else{
 					sayToClient("Invalid User: Try \\kick USERTOKICK");
 				}
