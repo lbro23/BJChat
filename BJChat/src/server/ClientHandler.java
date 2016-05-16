@@ -82,7 +82,32 @@ public class ClientHandler implements Runnable {
 				awaitingPingResponse = false;
 				long timeElapsed = System.currentTimeMillis() - pingStartTime;
 			}
-		}
+		} else if(eq(cmd[0], "admin")){
+			if(eq(cmd[1], server.getAdminPassword())){
+				user.makeAdmin();
+				sayToClient("You are now an admin");
+			}else{
+				sayToClient("Wrong password");
+			}
+		} else if(eq(cmd[0], "kick")){
+			if(user.isAdmin()){
+				String name = "";
+				for(int i = 1; i<cmd.length-1;i++){
+					name+= cmd[i] + " ";
+				}
+				name+=cmd[cmd.length-1];
+				ClientHandler c = server.findByName(name);
+				if(c!= null){
+					c.sayToClient("\\kick");
+					server.sayToAllClients(user.getName() + " has kicked " + name);
+					server.removeUser(c);
+				}else{
+					sayToClient("enter valid user");
+				}
+			}else{
+				sayToClient("insuffiecent permission");
+			}
+		}//end kick command
 	}
 	
 	/**

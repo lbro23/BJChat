@@ -141,10 +141,21 @@ public class Server extends Thread{
 				c.sayToClient("\\kick");
 				sayToAllClients("<SERVER> has kicked " + name);
 				removeUser(c);
+			}else{
+				sayToConsole("enter valid user");
 			}
-		}
+		}	else if(eq(cmd[0], "setpassword")){
+				if(cmd.length>2){
+					sayToConsole("enter valid password");
+				}else{
+					setAdminPassword(cmd[1]);
+					sayToConsole("password set");
+					}	
+				}
+			}
+		
 		//sayToAllClients("\\" + cmd[0]);
-	}
+	
 	
 	public void removeUser(ClientHandler c) {
 		clients.remove(c);
@@ -157,6 +168,8 @@ public class Server extends Thread{
 	public void setAdminPassword(String message) {
 		adminPassword = message;
 	}
+	
+	public String getAdminPassword(){return adminPassword;}
 	
 	public ClientHandler findByName(String id) {
 		for(ClientHandler c: clients) {
