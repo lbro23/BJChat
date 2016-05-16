@@ -32,7 +32,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	JButton button;
 	PrintStream output;
 	Scanner serverInput;
-	
+	//
 	public ServerGui() {
 		super("BJ Chat Server");
 		this.setLocation(300, 100);
