@@ -136,9 +136,7 @@ public class Client extends Thread {
 				toServer.println(rawCommand);
 			} else {
 				try{
-					String message = "";
-					for(int i= 1; i<cmd.length; i++)
-						message+=cmd[i] + " ";
+					String message = rawCommand.substring(6);
 					message = message.trim();
 					toServer.println("\\disconnect");
 					fromServer.close();
