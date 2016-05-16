@@ -13,7 +13,7 @@ public class Server extends Thread{
 	static final int defaultPort = 4445;
 	int currentId = 1;
 	ServerSocket serverSocket;
-	ArrayList<ClientHandler> clients;
+	volatile ArrayList<ClientHandler> clients;
 	ServerGui gui;
 	boolean running;
 	String adminPassword = "default";
@@ -125,38 +125,40 @@ public class Server extends Thread{
 	}
 	
 	public void executeCommand(String[] cmd) {
-		if(eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
+		if (eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
 			refreshPing();
 			updateUsers();
-		} else if(eq(cmd[0], "killclient")) {
+			gui.println("Updating Users: Pinging All Clients");
+		} else if (eq(cmd[0], "killclient")) {
 			ClientHandler u = findByName(cmd[1]);
 			u.sayToClient("\\kill");
-		} else if(eq(cmd[0], "kick")){
+		} else if (eq(cmd[0], "kick")) {
 			ClientHandler c = findByName(cmd[1]);
-			if(c!= null){
+			if (c != null) {
 
 				String message = "";
-				for(int i = 2; i < cmd.length; i++) {
+				for (int i = 2; i < cmd.length; i++) {
 					message += cmd[i] + " ";
 				}
 				c.sayToClient("\\kick " + message);
 				sayToAllClients("<SERVER> has kicked " + cmd[1]);
 				sayToConsole(cmd[1] + " kicked (" + message + ")");
 				removeUser(c);
-			}else{
-				sayToConsole("enter valid user");
+			} else {
+				sayToConsole("Invalid Username!");
 			}
-		}	else if(eq(cmd[0], "setpassword")){
-				if(cmd.length>2){
-					sayToConsole("Incorrect Command Format: Try \\setpassword NEWPASSWORD");
-				}else{
-					setAdminPassword(cmd[1]);
-					sayToConsole("Password Set");
-					}	
-				}
+		} else if (eq(cmd[0], "setpassword")) {
+			if (cmd.length > 2) {
+				sayToConsole("Incorrect Command Format: Try \\setpassword NEWPASSWORD");
+			} else {
+				setAdminPassword(cmd[1]);
+				sayToConsole("Password Set");
 			}
+		} else {
+			gui.println("Unrecognized Command! Type \\help for suggestions");
+		}
+	}
 		
-		//sayToAllClients("\\" + cmd[0]);
 	
 	
 	public void removeUser(ClientHandler c) {

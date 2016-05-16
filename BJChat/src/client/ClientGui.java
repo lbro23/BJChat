@@ -49,7 +49,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		if(s == null) return;
 		String name = name();
 		cli = new Client(this, s, name);
-		if(name == null) {cli.sendLine("\\kill");}
+		if(name == null) {cli.sendLine("\\kill"); closeWindow();}
 	}
 
 	private Socket connect() {
@@ -83,22 +83,12 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	}
 	
 	private String name() {
-		boolean goodName = false;
 		String message = "Input Desired Username";
 		String name = "";
-		while(!goodName) {
+		while(!isValidName(name)) {
 			name = JOptionPane.showInputDialog(null, message);
-			if(name != null) {
-				goodName = true;
-				if(name.length() > 11 || name.length() <= 2) goodName = false;
-				for(int i = 0; i < name.length(); i++) {
-					if(!Character.isLetterOrDigit(name.charAt(i))) {goodName = false;}
-				}
-			} else {
-				closeWindow();
-				return null;
-			}
-			message = "Input New Name and Try Again\n\nName must be beween 2 and 10 characters\nName must only contain letters and numbers";
+			if(name == null) { return null; }
+			message = "Invalid Name! Try again\n\nName must be beween 2 and 10 characters\nName must only contain letters and numbers";
 		}
 		return name;
 	}
@@ -116,7 +106,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		console.setBackground(Color.WHITE);
 		
 		users.setEditable(false);
-		users.setPreferredSize(new Dimension(50, this.getHeight() - 100));
+		users.setPreferredSize(new Dimension(150, this.getHeight() - 100));
 		users.setBackground(Color.LIGHT_GRAY);
 		
 		Box vertical = Box.createVerticalBox();
@@ -236,8 +226,14 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			JOptionPane.showMessageDialog( null, message);
 		}
 	}
-
-	public static void main(String[] args0){
-		ClientGui cli = new ClientGui();
+	
+	public static boolean isValidName(String s) {
+		if(s == null || s.length() < 1 || s.length() > 11) return false;
+		for(int i = 0; i < s.length(); i++) {
+			if(!Character.isLetterOrDigit(s.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

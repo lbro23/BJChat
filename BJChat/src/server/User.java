@@ -10,10 +10,10 @@ public class User {
 	static ArrayList<User> allUsers;
 	
 	Socket socket;
-	String name;
+	volatile String name;
 	int id;
 	boolean administrator = false;
-	int ping;
+	volatile int ping;
 	String hostName;
 	
 	PrintStream outputToClient;

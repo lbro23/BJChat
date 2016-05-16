@@ -76,6 +76,18 @@ public class Client extends Thread {
 				if(timeElapsed > pingTimeout) {
 					gui.println("Timed Out From Server: Check network connection and server status");
 					awaitingPingResponse = false;
+					try {
+						toServer.println("\\disconnect");
+						fromServer.close();
+						toServer.close();
+						socket.close();
+						
+						gui.println("Disconnected");
+						dead = true;
+						gui.closeWindow();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -166,8 +178,12 @@ public class Client extends Thread {
 			}
 		} else if(eq(cmd[0], "changename")) {
 			if(cmd.length == 2) {
-				userName = cmd[1];
-				toServer.println("\\" + cmd[0] + " " + cmd[1]);
+				if(ClientGui.isValidName(cmd[1])) {
+					userName = cmd[1];
+					toServer.println("\\" + cmd[0] + " " + cmd[1]);
+				} else {
+					gui.println("Incorrect Name Format! Must be letters and digits between 2 and 10 Characters");
+				}
 			} else {
 				gui.println("Incorrect Command Format: Try \\changename NEWNAME");
 			}

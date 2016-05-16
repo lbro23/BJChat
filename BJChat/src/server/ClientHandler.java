@@ -13,8 +13,9 @@ public class ClientHandler implements Runnable {
 	User user;
 	Server server;
 	
-	boolean awaitingPingResponse;
-	long pingStartTime;
+	volatile boolean awaitingPingResponse;
+	volatile long pingStartTime;
+	volatile long lastConnectTime;
 	
 	boolean running; // used to stop infinite loop
 	
@@ -79,7 +80,9 @@ public class ClientHandler implements Runnable {
 		} else if(eq(cmd[0], "pingresponse")) {
 			if(awaitingPingResponse) {
 				awaitingPingResponse = false;
-				user.setMostRecentPing((int)(System.currentTimeMillis() - pingStartTime));
+				int timeElapsed = (int)(System.currentTimeMillis() - pingStartTime);
+				user.setMostRecentPing(timeElapsed);
+				server.sayToConsole("Ping " + user.getHostName() + " , result " + timeElapsed);
 			}
 		} else if(eq(cmd[0], "admin")){
 			if(cmd.length != 2) {
@@ -131,6 +134,8 @@ public class ClientHandler implements Runnable {
 		pingStartTime = System.currentTimeMillis();
 		awaitingPingResponse = true;
 	}
+	
+	public long getLastConnectTime() { return lastConnectTime; }
 	
 
 }
