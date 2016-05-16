@@ -96,20 +96,26 @@ public class Client extends Thread {
 	 * and takes the appropriate action
 	 */
 	public boolean handleCommand(String rawCommand, boolean user) {
-		if(rawCommand.contains("\\")) {
-			if(rawCommand.charAt(0) == '\\' && !rawCommand.substring(1).contains("\\")) {
-				String[] cmd = rawCommand.substring(1).split(" ");
-				executeCommand(cmd, user);
+		if(!user) {
+			if(rawCommand.charAt(0) == '\\') {
 				return false;
 			} else {
-				gui.println("ERROR: Incorrectly Formatted Command: Use \\ followed by command and parameters, separated by spaces");
+				return true;
+			}
+		} else if(rawCommand.contains("\\")) {
+			if(rawCommand.charAt(0) == '\\' && !rawCommand.substring(1).contains("\\")) { 
+				String[] cmd = rawCommand.substring(1).split(" ");
+				executeCommand(cmd, user, rawCommand);
+				return false;
+			} else {
+				gui.println("Incorrectly Formatted Command! Use \\COMMAND followed by PARAMETERS");
 				return true;
 			}
 		}
 		return true;
 	}
 	
-	public void executeCommand(String[] cmd, boolean user) {
+	public void executeCommand(String[] cmd, boolean user, String rawCommand) {
 		if(eq(cmd[0], "kill")) {
 			try {
 				toServer.println("\\disconnect");
@@ -124,18 +130,21 @@ public class Client extends Thread {
 				e.printStackTrace();
 			}
 		}else if (eq(cmd[0], "kick")){
-			try{
-			toServer.println("\\disconnect");
-			fromServer.close();
-			toServer.close();
-			socket.close();
-			
-			gui.println("Disconnected");
-			dead = true;
-			gui.kicked();
-			gui.closeWindow();
-			}catch(Exception e){
-				e.printStackTrace();			}
+			if(user) {
+				toServer.println(rawCommand);
+			} else {
+				try{
+					toServer.println("\\disconnect");
+					fromServer.close();
+					toServer.close();
+					socket.close();
+					
+					gui.println("Disconnected");
+					dead = true;
+					gui.kicked();
+					gui.closeWindow();
+				}catch(Exception e){ e.printStackTrace(); }
+			}
 		}
 		else if(eq(cmd[0], "ping")) {
 			if(user) {
@@ -165,7 +174,12 @@ public class Client extends Thread {
 				gui.cleanConsole("Console Cleaned: Server Command");
 			}
 		} else if(eq(cmd[0], "userupdate")){
-			updateUsers(cmd[1]);
+			if(!user)
+				updateUsers(cmd[1]);
+		} else {
+			if(user) {
+				toServer.println(rawCommand);
+			}
 		}
 	}
 	

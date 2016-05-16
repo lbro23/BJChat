@@ -35,7 +35,6 @@ public class ClientHandler implements Runnable {
 				String message = user.getInput().nextLine();
 				if(message.contains("\\")) {
 					String[] cmd = message.substring(1).split(" ");
-					server.sayToConsole("[Command Received] " + user.getName() + ": " + cmd[0]);
 					executeCommand(cmd);
 				} else {
 					server.sayToAllClients(message);
@@ -89,12 +88,13 @@ public class ClientHandler implements Runnable {
 				user.makeAdmin();
 				sayToClient("You are now a Server Administrator");
 				server.sayToConsole(user.getName() + " is now an admin");
+				server.updateUsers(); // send new user info
 			}else{
 				sayToClient("Incorrect Password");
 			}
 		} else if(eq(cmd[0], "kick")){
 			if(user.isAdmin()){
-				ClientHandler c = server.findByName(cmd[0]);
+				ClientHandler c = server.findByName(cmd[1]);
 				if(c!= null){
 					c.sayToClient("\\kick");
 					server.sayToAllClients(cmd[0] + " has been kicked by " + user.getName());
@@ -105,7 +105,11 @@ public class ClientHandler implements Runnable {
 			}else{
 				sayToClient("Insufficient Permission");
 			}
-		}//end kick command
+		} else if(eq(cmd[0], "help")) {
+			sayToClient("Not Yet Implemented");
+		} else {
+			sayToClient("Unrecognized Command! Try \\help");
+		}
 	}
 	
 	/**
