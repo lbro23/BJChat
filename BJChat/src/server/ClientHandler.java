@@ -86,6 +86,7 @@ public class ClientHandler implements Runnable {
 			if(eq(cmd[1], server.getAdminPassword())){
 				user.makeAdmin();
 				sayToClient("You are now an admin");
+				server.sayToConsole(user.getName() + " is now an admin");
 			}else{
 				sayToClient("Wrong password");
 			}
