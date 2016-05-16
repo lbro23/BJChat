@@ -47,9 +47,9 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		this.setVisible(true);
 		Socket s = connect();
 		if(s == null) return;
-		String name = JOptionPane.showInputDialog(null, "Input Desired Username");
-		if(name == "" || name == null) { name = s.getLocalAddress().getHostName().substring(0, 11); }
+		String name = name();
 		cli = new Client(this, s, name);
+		if(name == null) {cli.sendLine("\\kill");}
 	}
 
 	private Socket connect() {
@@ -59,12 +59,14 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		while(sock == null) {
 			try {
 				String s = JOptionPane.showInputDialog(null, "Input Valid Server Address");
-				if(s == null || s.equals("")) {
+				if(s == null) {
+					closeWindow();
+					break;
+				} else if(s.equals("")) {
 					if(JOptionPane.showConfirmDialog(null, "Empty Input Received. Close?") == 0) {
 						closeWindow();
 						break;
 					}
-					
 				}
 				serverAddress = InetAddress.getByName(s);
 				sock = new Socket(serverAddress, port);
@@ -78,6 +80,27 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			}
 		}
 		return sock;
+	}
+	
+	private String name() {
+		boolean goodName = false;
+		String message = "Input Desired Username";
+		String name = "";
+		while(!goodName) {
+			name = JOptionPane.showInputDialog(null, message);
+			if(name != null) {
+				goodName = true;
+				if(name.length() > 11 || name.length() <= 2) goodName = false;
+				for(int i = 0; i < name.length(); i++) {
+					if(!Character.isLetterOrDigit(name.charAt(i))) {goodName = false;}
+				}
+			} else {
+				closeWindow();
+				return null;
+			}
+			message = "Input New Name and Try Again\n\nName must be beween 2 and 10 characters\nName must only contain letters and numbers";
+		}
+		return "";
 	}
 
 	public void setupGui() {
