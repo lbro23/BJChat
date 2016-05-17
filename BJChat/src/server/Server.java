@@ -39,6 +39,7 @@ public class Server extends Thread{
 			banList = new File(fileName);
 		} catch (IOException e) {
 			gui.println("No BanList found, creating one.");
+			//PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
