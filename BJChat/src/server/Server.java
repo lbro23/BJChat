@@ -242,6 +242,8 @@ public class Server extends Thread{
 			} else {
 				gui.println("Invalid Command Format! Try \\autoscroll true/false");
 			}	
+		} else if(eq(cmd[0], "help")) {
+			gui.showHelp();
 		}
 		else {
 			gui.println("Unrecognized Command! Type \\help for suggestions");
