@@ -25,7 +25,6 @@ public class Server extends Thread{
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
 	File banList;
-	// hello
 	
 	public Server(int port, ServerGui gui) {
 		try {
@@ -34,12 +33,13 @@ public class Server extends Thread{
 			clients = new ArrayList<ClientHandler>();
 			running = true;
 			this.gui = gui;
+			banList = new File(fileName);
+			if(!banList.exists()) {
+				gui.println("No BanList found, creating one.");
+				PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+			}
 			gui.println("New Server Created Successfully");
 			this.start();
-			banList = new File(fileName);
-		} catch (IOException e) {
-			gui.println("No BanList found, creating one.");
-			//PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
