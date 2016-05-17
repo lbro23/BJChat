@@ -1,9 +1,15 @@
 package server;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,6 +23,7 @@ public class Server extends Thread{
 	ServerGui gui;
 	boolean running;
 	String adminPassword = "default";
+	final String fileName = "Banlist.txt";
 	// hello
 	
 	public Server(int port, ServerGui gui) {
@@ -28,6 +35,9 @@ public class Server extends Thread{
 			this.gui = gui;
 			gui.println("New Server Created Successfully");
 			this.start();
+		} catch (IOException e) {
+			gui.println("No BanList found, creating one.");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -48,6 +58,12 @@ public class Server extends Thread{
 			while(running) {
 				// connect to user, gather information
 				Socket newSocket = serverSocket.accept();
+				Boolean banStatus = checkBan(newSocket.getInetAddress().getHostName());
+				if(banStatus){
+					//say something to the client telling them they are banned
+					PrintWriter p = new PrintWriter(newSocket.getOutputStream());
+					p.println("\\kick You are banned from this server");
+				}else{
 				Scanner newInput = new Scanner(newSocket.getInputStream());
 				String name = newInput.nextLine();
 				
@@ -61,12 +77,31 @@ public class Server extends Thread{
 				gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
 				sayToAllClients(name + " has joined the server");
 				updateUsers();
+				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	private boolean checkBan(String adress) {// returns true if banned
+		try {
+		File file = new File(fileName);
+		FileReader reader = new FileReader(file);
+		BufferedReader r = new BufferedReader(reader);
+		String inline;
+		while((inline = r.readLine()) != null){
+			if(adress.equals(inline)){
+				return true;
+			}
+			
+		}
+		return false;
+		}catch(Exception e){
+				return false;
+		}
+	}
+
 	/**
 	 * Say the message to all clients
 	 */
@@ -154,7 +189,24 @@ public class Server extends Thread{
 				setAdminPassword(cmd[1]);
 				sayToConsole("Password Set");
 			}
-		} else {
+		}else if(eq(cmd[0], "ban")){
+			ClientHandler c = findByName(cmd[1]);
+			if (c != null) {
+				String address = c.getUser().getSocket().getInetAddress().getHostName();
+				try{
+					File file = new File(fileName);
+					FileWriter write = new FileWriter(file);
+					BufferedWriter b = new BufferedWriter(write);
+					b.newLine();
+					b.write(address);
+					c.sayToClient("\\kick You have been banned from this server.");
+					
+				}catch(Exception e){
+					
+				}
+			}	
+		}
+		else {
 			gui.println("Unrecognized Command! Type \\help for suggestions");
 		}
 	}
