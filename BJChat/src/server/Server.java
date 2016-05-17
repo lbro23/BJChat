@@ -129,7 +129,7 @@ public class Server extends Thread{
 			refreshPing();
 			updateUsers();
 			gui.println("Updating Users: Pinging All Clients");
-		} else if (eq(cmd[0], "killclient")) {
+		} else if (eq(cmd[0], "kill")) {
 			ClientHandler u = findByName(cmd[1]);
 			u.sayToClient("\\kill");
 		} else if (eq(cmd[0], "kick")) {
