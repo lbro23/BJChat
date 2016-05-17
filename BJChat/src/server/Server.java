@@ -60,12 +60,7 @@ public class Server extends Thread{
 			while(running) {
 				// connect to user, gather information
 				Socket newSocket = serverSocket.accept();
-				Boolean banStatus = checkBan(newSocket.getInetAddress().getHostName());
-				if(banStatus){
-					//say something to the client telling them they are banned
-					PrintWriter p = new PrintWriter(newSocket.getOutputStream());
-					p.println("\\kick You are banned from this server");
-				}else{
+				Boolean banned = checkBan(newSocket.getInetAddress().getHostName());
 				Scanner newInput = new Scanner(newSocket.getInputStream());
 				String name = newInput.nextLine();
 				
@@ -76,9 +71,14 @@ public class Server extends Thread{
 				clients.add(handler);
 				newThread.start();
 				
-				gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
-				sayToAllClients(name + " has joined the server");
-				updateUsers();
+				if(banned) {
+					//say something to the client telling them they are banned
+					handler.sayToClient("\\kick You are banned from this server");
+					gui.println("Ban: " + handler.getUser().getName() + " attempted to join");
+				} else {
+					gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
+					sayToAllClients(name + " has joined the server");
+					updateUsers();
 				}
 			}
 		}catch(Exception e) {
@@ -88,14 +88,13 @@ public class Server extends Thread{
 	
 	private boolean checkBan(String adress) {// returns true if banned
 		try {
-		FileReader reader = new FileReader(banList);
-		BufferedReader r = new BufferedReader(reader);
-		String inline;
-		while((inline = r.readLine()) != null){
-			if(adress.equals(inline)){
-				return true;
-			}
-			
+			FileReader reader = new FileReader(banList);
+			BufferedReader r = new BufferedReader(reader);
+			String inline;
+			while((inline = r.readLine()) != null){
+				if(adress.equals(inline)){
+					return true;
+				}	
 		}
 		return false;
 		}catch(Exception e){
@@ -197,14 +196,16 @@ public class Server extends Thread{
 				try{
 					FileWriter write = new FileWriter(banList);
 					BufferedWriter b = new BufferedWriter(write);
-					b.newLine();
 					b.write(address);
+					b.newLine();
 					c.sayToClient("\\kick You have been banned from this server.");
-					
+					b.close();
 				}catch(Exception e){
-					
+					e.printStackTrace();
 				}
-			}	
+			} else {
+				gui.println("Invalid Username! Try \\ban USERNAME");
+			}
 		}
 		else {
 			gui.println("Unrecognized Command! Type \\help for suggestions");
