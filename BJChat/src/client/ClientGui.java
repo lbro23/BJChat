@@ -155,7 +155,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		console.setText(console.getText() + message + "\n");
 	}
 	
-	public void cleanConsole(String message) { console.setText(message); }
+	public void cleanConsole(String message) { console.setText(message + "\n"); }
 	
 	public void closeWindow() { setVisible(false); dispose(); }
 	
