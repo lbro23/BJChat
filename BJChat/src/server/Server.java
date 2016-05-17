@@ -24,6 +24,7 @@ public class Server extends Thread{
 	boolean running;
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
+	File banList;
 	// hello
 	
 	public Server(int port, ServerGui gui) {
@@ -35,9 +36,9 @@ public class Server extends Thread{
 			this.gui = gui;
 			gui.println("New Server Created Successfully");
 			this.start();
+			banList = new File(fileName);
 		} catch (IOException e) {
 			gui.println("No BanList found, creating one.");
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,8 +87,7 @@ public class Server extends Thread{
 	
 	private boolean checkBan(String adress) {// returns true if banned
 		try {
-		File file = new File(fileName);
-		FileReader reader = new FileReader(file);
+		FileReader reader = new FileReader(banList);
 		BufferedReader r = new BufferedReader(reader);
 		String inline;
 		while((inline = r.readLine()) != null){
@@ -194,8 +194,7 @@ public class Server extends Thread{
 			if (c != null) {
 				String address = c.getUser().getSocket().getInetAddress().getHostName();
 				try{
-					File file = new File(fileName);
-					FileWriter write = new FileWriter(file);
+					FileWriter write = new FileWriter(banList);
 					BufferedWriter b = new BufferedWriter(write);
 					b.newLine();
 					b.write(address);
