@@ -76,7 +76,7 @@ public class Server extends Thread{
 				if(banned) {
 					//say something to the client telling them they are banned
 					handler.sayToClient("\\kick You are banned from this server");
-					gui.println("Banned Client: " + handler.getUser().getName() + " attempted to join");
+					gui.println("Banned Client: " + handler.getUser().getName() + " attempted to join from " + newUser.getHostName());
 				} else {
 					gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
 					sayToAllClients(name + " has joined the server");
@@ -94,7 +94,7 @@ public class Server extends Thread{
 			BufferedReader r = new BufferedReader(reader);
 			String inline;
 			while((inline = r.readLine()) != null){
-				String line = r.readLine();
+				String line = inline;
 				String u = line.substring(0, line.indexOf(":")); // username comes before colon
 				String a = line.substring(line.indexOf(":")+1); // address comes after colon
 				if(adress.equals(a)) return true;
@@ -163,6 +163,19 @@ public class Server extends Thread{
 		}
 	}
 	
+	/**
+	 * List of Available Server Commands
+	 * pingall: pings all clients, updates user list
+	 * updateusres: pings all clients, updates user list
+	 * kill CLIENTNAME: kills the client with name CLIENTNAME
+	 * kick CLIENTNAME MESSAGE: kicks the client with name CLIENTNAME, with pop-up MESSAGE
+	 * setpassword NEWPASSWORD: sets the server's administrator password
+	 * ban CLIENTNAME: bans the client with name CLIENTNAME via address and name
+	 * unban CLIENTNAME: removes the ban on CLIENTNAME from the ban list :: NOT YET IMPLEMENTED
+	 * cleanban: clears the ban list completely
+	 * autoscroll TRUE/FALSE: sets autoscroll function to the given command
+	 * @param cmd
+	 */
 	public void executeCommand(String[] cmd) {
 		if (eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
 			refreshPing();
@@ -181,7 +194,7 @@ public class Server extends Thread{
 				}
 				c.sayToClient("\\kick " + message);
 				sayToAllClients("<SERVER> has kicked " + cmd[1]);
-				sayToConsole(cmd[1] + " kicked (" + message + ")");
+				sayToConsole(cmd[1] + " has been kicked (" + message + ")");
 				removeUser(c);
 			} else {
 				sayToConsole("Invalid Username!");
@@ -207,13 +220,28 @@ public class Server extends Thread{
 				}catch(Exception e){
 					e.printStackTrace();
 				}
+				gui.println(c.getUser().getName() + " has been banned from the server");
 			} else {
 				gui.println("Invalid Username! Try \\ban USERNAME");
 			}
 		} else if(eq(cmd[0], "unban")) {
 			// TODO UNBAN CODE
 		} else if(eq(cmd[0], "clearban")) {
-			// TODO CLEAR BAN LIST
+			try {
+				new PrintWriter(fileName, "UTF-8");
+				banList = new File(fileName);
+				gui.println("Ban List has been cleared");
+			} catch (Exception e) {e.printStackTrace(); }
+		} else if(eq(cmd[0], "autoscroll")) {
+			if(cmd[1].equals("true") || cmd[1].equals("on")) {
+				gui.setAutoscroll(true);
+				gui.println("Autoscroll set to true");
+			} else if(cmd[1].equals("false") || cmd[1].equals("off")) {
+				gui.setAutoscroll(false);
+				gui.println("Autoscroll set to false");
+			} else {
+				gui.println("Invalid Command Format! Try \\autoscroll true/false");
+			}	
 		}
 		else {
 			gui.println("Unrecognized Command! Type \\help for suggestions");

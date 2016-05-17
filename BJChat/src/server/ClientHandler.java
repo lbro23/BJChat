@@ -70,6 +70,8 @@ public class ClientHandler implements Runnable {
 		if(eq(cmd[0], "disconnect")) {
 			server.sayToAllClients(user.getName() + " has disconnected from the server");
 			close();
+		} else if(eq(cmd[0], "dc")) {
+			close();
 		} else if(eq(cmd[0], "ping")) {
 			sayToClient("\\pingresponse");
 		} else if(eq(cmd[0], "changename")) {

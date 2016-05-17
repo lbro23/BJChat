@@ -36,6 +36,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	Client cli;
 	JTextPane users;
 	int port = 4445;
+	boolean autoscroll =true;
 	
 	public ClientGui(){
 		super("BJ Chat");
@@ -186,7 +187,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent paramActionEvent) {
-		if(paramActionEvent.getSource() == button) {
+		if(paramActionEvent.getSource() == button && !input.getText().equals("")) {
 			cli.sendLine(input.getText());
 			input.setText("");
 		}
@@ -194,8 +195,10 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	
 	public AdjustmentListener createAdjListener() {
 		return new AdjustmentListener() {  
-	        public void adjustmentValueChanged(AdjustmentEvent e) {  
-	            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+	        public void adjustmentValueChanged(AdjustmentEvent e) { 
+	        	if(autoscroll) {
+	        		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+	        	}
 	        }
 	    };
 	}
@@ -236,4 +239,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		}
 		return true;
 	}
+	
+	public void setAutoscroll(boolean scroll) { autoscroll = scroll; }
 }
