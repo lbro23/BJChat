@@ -18,6 +18,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -32,6 +33,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	JButton button;
 	PrintStream output;
 	Scanner serverInput;
+	boolean autoscroll = true;
 	//
 	public ServerGui() {
 		super("BJ Chat Server");
@@ -104,10 +106,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		input.addKeyListener(this);
 		this.add(whole);
 	}
-	
-	public static void main(String[] args) {
-		ServerGui gui = new ServerGui();
-	}
+
 	
 	public WindowListener createWindowListener() {
 		return new WindowListener() {
@@ -132,7 +131,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == button) {
+		if(e.getSource() == button && !input.getText().equals("")) {
 			server.sendCommand(input.getText());
 			input.setText("");
 		}
@@ -157,7 +156,8 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	public AdjustmentListener createAdjListener() {
 		return new AdjustmentListener() {  
 	        public void adjustmentValueChanged(AdjustmentEvent e) {  
-	            e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+	        	if(autoscroll)
+	        		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
 	        }
 	    };
 	}
@@ -171,6 +171,24 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		if(paramKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
 			actionPerformed(new ActionEvent(button, 1, "Button Pressed"));
 		}
+	}
+	
+	public void setAutoscroll(boolean scroll) {
+		autoscroll = scroll;
+	}
+	// hitler did nothing wrong
+	public void showHelp() {
+		String help = "List of Available Server Commands\n" +
+				 "\\pingall: pings all clients, updates user list\n" +
+				 "\\updateusres: pings all clients, updates user list\n" +
+				 "\\kill CLIENTNAME: kills the client with name CLIENTNAME\n" +
+				 "\\kick CLIENTNAME MESSAGE: kicks the client with name CLIENTNAME, with pop-up MESSAGE\n" +
+				 "\\setpassword NEWPASSWORD: sets the servers administrator password\n" +
+				 "\\ban CLIENTNAME: bans the client with name CLIENTNAME via address and name\n" +
+				 "\\unban CLIENTNAME: removes the ban on CLIENTNAME from the ban list :: NOT YET IMPLEMENTED\n" +
+				 "\\clearban: clears the ban list completely\n" +
+				 "\\autoscroll TRUE/FALSE: sets autoscroll function to the given command\n";
+		JOptionPane.showMessageDialog(null, help);
 	}
 
 }

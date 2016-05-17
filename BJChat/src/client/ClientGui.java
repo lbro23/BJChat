@@ -229,7 +229,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			JOptionPane.showMessageDialog( null, message);
 		}
 	}
-	
+	// poopoo
 	public static boolean isValidName(String s) {
 		if(s == null || s.length() < 1 || s.length() > 11) return false;
 		for(int i = 0; i < s.length(); i++) {
