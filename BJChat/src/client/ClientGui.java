@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -36,6 +37,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	Client cli;
 	JTextPane users;
 	int port = 4445;
+	JScrollBar scrollBar;
 	boolean autoscroll =true;
 	
 	public ClientGui(){
@@ -118,7 +120,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		consolePane.getVerticalScrollBar().addAdjustmentListener(createAdjListener());
+		scrollBar = consolePane.getVerticalScrollBar();
 		
 		JScrollPane userPane = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -154,6 +156,13 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	
 	public void println(String message) {
 		console.setText(console.getText() + message + "\n");
+		scrollDown();
+	}
+	
+	public void scrollDown() {
+		if(scrollBar != null) {
+			scrollBar.setValue(scrollBar.getMaximum());
+		}
 	}
 	
 	public void cleanConsole(String message) { console.setText(message + "\n"); }
@@ -191,16 +200,6 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 			cli.sendLine(input.getText());
 			input.setText("");
 		}
-	}
-	
-	public AdjustmentListener createAdjListener() {
-		return new AdjustmentListener() {  
-	        public void adjustmentValueChanged(AdjustmentEvent e) { 
-	        	if(autoscroll) {
-	        		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-	        	}
-	        }
-	    };
 	}
 
 	@Override

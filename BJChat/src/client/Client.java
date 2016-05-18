@@ -196,14 +196,6 @@ public class Client extends Thread {
 		} else if(eq(cmd[0], "userupdate")){
 			if(!user)
 				updateUsers(rawCommand.substring(12));
-		} else if(eq(cmd[0], "autoscroll")) {
-			if(cmd[1].equals("true") || cmd[1].equals("on")) {
-				gui.setAutoscroll(true);
-			} else if(cmd[1].equals("false") || cmd[1].equals("off")) {
-				gui.setAutoscroll(false);
-			} else {
-				gui.println("Invalid Command Format! Try \\autoscroll true/false");
-			}	
 		}else {
 			if(user) {
 				toServer.println(rawCommand);

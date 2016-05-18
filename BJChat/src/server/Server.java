@@ -232,16 +232,6 @@ public class Server extends Thread{
 				banList = new File(fileName);
 				gui.println("Ban List has been cleared");
 			} catch (Exception e) {e.printStackTrace(); }
-		} else if(eq(cmd[0], "autoscroll")) {
-			if(cmd[1].equals("true") || cmd[1].equals("on")) {
-				gui.setAutoscroll(true);
-				gui.println("Autoscroll set to true");
-			} else if(cmd[1].equals("false") || cmd[1].equals("off")) {
-				gui.setAutoscroll(false);
-				gui.println("Autoscroll set to false");
-			} else {
-				gui.println("Invalid Command Format! Try \\autoscroll true/false");
-			}	
 		} else if(eq(cmd[0], "help")) {
 			gui.showHelp();
 		}

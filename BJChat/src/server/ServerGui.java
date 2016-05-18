@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -33,6 +34,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	JButton button;
 	PrintStream output;
 	Scanner serverInput;
+	JScrollBar scrollBar;
 	boolean autoscroll = true;
 	//
 	public ServerGui() {
@@ -71,7 +73,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		
 		JScrollPane consolePane = new JScrollPane(console, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		consolePane.getVerticalScrollBar().addAdjustmentListener(createAdjListener());
+		scrollBar = consolePane.getVerticalScrollBar();
 		
 		JScrollPane userPane = new JScrollPane(users, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -141,6 +143,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		String currentText = console.getText();
 		currentText += message + "\n";
 		console.setText(currentText);
+		scrollDown();
 		//console.update(this.getGraphics());
 	}
 	
@@ -153,13 +156,10 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 		}
 	}
 	
-	public AdjustmentListener createAdjListener() {
-		return new AdjustmentListener() {  
-	        public void adjustmentValueChanged(AdjustmentEvent e) {  
-	        	if(autoscroll)
-	        		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
-	        }
-	    };
+	public void scrollDown() {
+		if(scrollBar != null) {
+			scrollBar.setValue(scrollBar.getMaximum());
+		}	
 	}
 
 	@Override
@@ -186,9 +186,8 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 				 "\\setpassword NEWPASSWORD: sets the servers administrator password\n" +
 				 "\\ban CLIENTNAME: bans the client with name CLIENTNAME via address and name\n" +
 				 "\\unban CLIENTNAME: removes the ban on CLIENTNAME from the ban list :: NOT YET IMPLEMENTED\n" +
-				 "\\clearban: clears the ban list completely\n" +
-				 "\\autoscroll TRUE/FALSE: sets autoscroll function to the given command\n";
-		JOptionPane.showMessageDialog(null, help);
+				 "\\clearban: clears the ban list completely\n";
+				 JOptionPane.showMessageDialog(null, help);
 	}
 
 }
