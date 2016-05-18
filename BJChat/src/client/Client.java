@@ -198,7 +198,7 @@ public class Client extends Thread {
 			}
 		} else if(eq(cmd[0], "userupdate")){
 			if(!user)
-				updateUsers(rawCommand.substring(12));
+				updateUsers(rawCommand.substring(12)); // hi
 		} else if(eq(cmd[0], "dm")) { // COMMAND FORMAT "\\dm TO FROM" 
 			if(user) {
 				toServer.println("\\dm " + cmd[1] + " " + userName); // request to start DM
