@@ -205,29 +205,36 @@ public class Client extends Thread {
 				gui.println("DM Request Sent, waiting for " + cmd[1] + " to accept.");
 			} else {
 				boolean response = gui.booleanMessage(cmd[2] + " has requested a Direct Message session.\n Do you accept?");
-				toServer.println("\\dmresponse " + response + " " + cmd[2] + " " + cmd[1]);
+				if(response) dms.add(new DirectMessageWindow(cmd[2], userName, this));
+				toServer.println("\\dmresponse " + cmd[2] + " " + cmd[1] + " " +  response);
 			}
 		} else if(eq(cmd[0], "dmresponse")) { // COMMAND FORMAT "\\dmresponse true/false TO FROM"
 			if(user) {
 				gui.println("Incorrect Command Format! Try \\dm USERNAME");
-				toServer.println(rawCommand);
 			} else {
-				if(cmd[1].equals("true")) {
-					gui.println(cmd[3] + " has accepted your DM request! Opening DM Window.");
-					dms.add(new DirectMessageWindow(cmd[2], this));
+				if(cmd[3].equals("true")) {
+					gui.println(cmd[2] + " has accepted your DM request! Opening DM Window.");
+					dms.add(new DirectMessageWindow(cmd[2], userName, this));
 				} else {
-					gui.println(cmd[3] + " has rejected your DM request!" );
+					gui.println(cmd[2] + " has rejected your DM request!" );
 				}
 			}
-		} else if(eq(cmd[0], "dmmessage")) { // COMMAND FORMAT "\\dmmessage TO FROM MESSAGE"
+		} else if(eq(cmd[0], "dmmessage")) { // COMMAND FORMAT "\\dmmessage DESTINATION MESSAGE"
 			if(user) {
-				toServer.println(rawCommand);
+				String message = "\\dmmessage " + cmd[1] + " " + userName;
+				for(int i = 2; i < cmd.length; i++) { message += " " + cmd[i]; }
+				toServer.println(message);
 			} else {
 				String message = "";
 				for(int i = 3; i < cmd.length; i++) {
-					message+= cmd[i];
+					message+= cmd[i] + " ";
 				}
-				findDMByName(cmd[2]).sendLine(cmd[2] + ": " + message);
+				DirectMessageWindow dmWindow = findDMByName(cmd[2]);
+				if(dmWindow != null) {
+					dmWindow.sendLine(cmd[2] + ": " + message);
+				} else {
+					gui.println("<WHISPER> " + cmd[2] + ": " + message);
+				}
 			}
 		}
 		else {
@@ -255,6 +262,8 @@ public class Client extends Thread {
 		}
 		return null;
 	}
+	
+	public void removeDM(DirectMessageWindow d) { dms.remove(d); }
 	
 	/**
 	 * Equals to ignore case
