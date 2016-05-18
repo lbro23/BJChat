@@ -65,7 +65,7 @@ public class ClientHandler implements Runnable {
 		server.removeUser(this);
 		server.updateUsers();
 	}
-	
+	// hello
 	public void executeCommand(String[] cmd) {
 		if(eq(cmd[0], "disconnect")) {
 			server.sayToAllClients(user.getName() + " has disconnected from the server");
