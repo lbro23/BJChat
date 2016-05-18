@@ -176,7 +176,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	public void setAutoscroll(boolean scroll) {
 		autoscroll = scroll;
 	}
-	// hitler did nothing wrong
+	
 	public void showHelp() {
 		String help = "List of Available Server Commands\n" +
 				 "\\pingall: pings all clients, updates user list\n" +

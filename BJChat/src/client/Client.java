@@ -5,11 +5,13 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import javax.swing.text.html.HTML;
 public class Client extends Thread {
+	ArrayList<DirectMessageWindow> dms;
 	static int defaultPort = 4445;
 	public boolean dead;
 	Socket socket;
@@ -30,6 +32,7 @@ public class Client extends Thread {
 	
 	// PRECONDITION: s must be an open socket with the host
 	public Client(ClientGui gui, Socket s, String name) {
+		dms = new ArrayList<DirectMessageWindow>();
 		running = true;
 		socket = s;
 		try {
@@ -196,7 +199,38 @@ public class Client extends Thread {
 		} else if(eq(cmd[0], "userupdate")){
 			if(!user)
 				updateUsers(rawCommand.substring(12));
-		}else {
+		} else if(eq(cmd[0], "dm")) { // COMMAND FORMAT "\\dm TO FROM" 
+			if(user) {
+				toServer.println("\\dm " + cmd[1] + " " + userName); // request to start DM
+				gui.println("DM Request Sent, waiting for " + cmd[1] + " to accept.");
+			} else {
+				boolean response = gui.booleanMessage(cmd[2] + " has requested a Direct Message session.\n Do you accept?");
+				toServer.println("\\dmresponse " + response + " " + cmd[2] + " " + cmd[1]);
+			}
+		} else if(eq(cmd[0], "dmresponse")) { // COMMAND FORMAT "\\dmresponse true/false TO FROM"
+			if(user) {
+				gui.println("Incorrect Command Format! Try \\dm USERNAME");
+				toServer.println(rawCommand);
+			} else {
+				if(cmd[1].equals("true")) {
+					gui.println(cmd[3] + " has accepted your DM request! Opening DM Window.");
+					dms.add(new DirectMessageWindow(cmd[2], this));
+				} else {
+					gui.println(cmd[3] + " has rejected your DM request!" );
+				}
+			}
+		} else if(eq(cmd[0], "dmmessage")) { // COMMAND FORMAT "\\dmmessage TO FROM MESSAGE"
+			if(user) {
+				toServer.println(rawCommand);
+			} else {
+				String message = "";
+				for(int i = 3; i < cmd.length; i++) {
+					message+= cmd[i];
+				}
+				findDMByName(cmd[2]).sendLine(cmd[2] + ": " + message);
+			}
+		}
+		else {
 			if(user) {
 				toServer.println(rawCommand);
 			}
@@ -211,6 +245,15 @@ public class Client extends Thread {
 		toServer.println("\\ping");
 		pingStartTime = System.currentTimeMillis();
 		awaitingPingResponse =  true;
+	}
+	
+	public DirectMessageWindow findDMByName(String name) {
+		for(DirectMessageWindow w: dms) {
+			if(w.getName().equals(name)) {
+				return w;
+			}
+		}
+		return null;
 	}
 	
 	/**

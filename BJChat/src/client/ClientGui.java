@@ -239,5 +239,10 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 		return true;
 	}
 	
+	
+	public boolean booleanMessage(String msg) {
+		return JOptionPane.showConfirmDialog(null, msg) == 1;
+	}
+	
 	public void setAutoscroll(boolean scroll) { autoscroll = scroll; }
 }

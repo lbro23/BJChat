@@ -116,7 +116,10 @@ public class ClientHandler implements Runnable {
 			}
 		} else if(eq(cmd[0], "help")) {
 			sayToClient("Not Yet Implemented");
-		} else {
+		} else if(eq(cmd[0], "dm") || eq(cmd[0], "dmresponse") || eq(cmd[0], "dmmessage")) {
+			
+		}
+		else {
 			sayToClient("Unrecognized Command! Try \\help");
 		}
 	}
