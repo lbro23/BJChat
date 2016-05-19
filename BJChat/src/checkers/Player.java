@@ -29,15 +29,50 @@ public class Player {
 		
 	}
 	
-	public boolean isValidMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
+	public boolean isValidPlebMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
+		int curCol = c.getCol();
+		int curRow = c.getRow();
+		boolean king = c.isKing();
 		if(team.equals(Color.black)){
-			//do for black moves
+			if(king){
+			if(row>=0 && row < 9 && col >= 0 && col <9 && (row == curRow-1 && (col == curCol+1 || col == curCol-1)))
+				return true;
+			}
+			return(row>=0 && row < 9 && col >= 0 && col <9 && (row == curRow+1 && (col == curCol+1 || col == curCol-1)));
+			
 		}else{
-			//check for valid red move
+			if(king){
+			if(row>=0 && row < 9 && col >= 0 && col <9 && (row == curRow+1 && (col == curCol+1 || col == curCol-1)))
+				return true;
+			}
+			return(row>=0 && row < 9 && col >= 0 && col <9 && (row == curRow-1 && (col == curCol+1 || col == curCol-1)));
 		}
-		return false; // I H8 Errors
-		
 	}
+	
+	public boolean isValidCaptureMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
+		int curCol = c.getCol();
+		int curRow = c.getRow();
+		boolean king = c.isKing();
+		if(team.equals(Color.black)){
+			if(king){
+				if((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam().equals(Color.red)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.red)))))
+					return true;
+			}
+			return ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam().equals(Color.red)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.red)))));
+		}else{
+			if(king){
+				if ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam().equals(Color.black)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.black)))))
+
+					return true;
+			}
+				return ((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam().equals(Color.black)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.black)))));
+			
+		}
+	}
+	
+			
+	
+	
 	
 	public void upDateBoard(CheckerBoard newBoard){
 		this.board = newBoard;

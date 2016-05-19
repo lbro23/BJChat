@@ -38,4 +38,8 @@ public class CheckerBoard implements Serializable {
 		
 	}//end constructor
 
+	public Checker getPiece(int i, int j) {
+		return gameBoard[i][j];
+	}
+
 }

@@ -30,7 +30,6 @@ public class CheckersGame extends Thread {
 	
 	private void updateOtherPlayer(int playersTurn2) {
 		
-		
 	}
 
 	public CheckersGame(Socket Player1, Socket Player2){
@@ -43,6 +42,7 @@ public class CheckersGame extends Thread {
 		p2Input = new ObjectInputStream(p2.getInputStream());
 		p2Output = new ObjectOutputStream(p2.getOutputStream());
 		board = new CheckerBoard();
+		
 		this.start();
 		}catch(Exception e){
 			e.printStackTrace();

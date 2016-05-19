@@ -3,6 +3,7 @@ package checkers;
 import java.awt.Color;
 
 public class Checker {
+	
 	boolean king = false;
 	Color team;
 	int row;
