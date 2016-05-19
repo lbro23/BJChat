@@ -36,7 +36,7 @@ public class ClientHandler implements Runnable {
 				String message = user.getInput().nextLine();
 				if(message.contains("\\")) {
 					String[] cmd = message.substring(1).split(" ");
-					executeCommand(cmd);
+					executeCommand(cmd, message);
 				} else {
 					server.sayToAllClients(message);
 				}
@@ -66,7 +66,7 @@ public class ClientHandler implements Runnable {
 		server.updateUsers();
 	}
 	// hello
-	public void executeCommand(String[] cmd) {
+	public void executeCommand(String[] cmd, String rawCommand) {
 		if(eq(cmd[0], "disconnect")) {
 			server.sayToAllClients(user.getName() + " has disconnected from the server");
 			close();
@@ -117,7 +117,7 @@ public class ClientHandler implements Runnable {
 		} else if(eq(cmd[0], "help")) {
 			sayToClient("Not Yet Implemented");
 		} else if(eq(cmd[0], "dm") || eq(cmd[0], "dmresponse") || eq(cmd[0], "dmmessage")) {
-			
+			server.findByName(cmd[1]).sayToClient(rawCommand);
 		}
 		else {
 			sayToClient("Unrecognized Command! Try \\help");
