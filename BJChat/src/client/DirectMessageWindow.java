@@ -22,11 +22,12 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	JTextField input;
 	JButton button;
 	JScrollBar scrollBar;
-	String destination;
+	String target, source;
 	
-	public DirectMessageWindow(String name, Client c) {
-		super("BJ Chat DM with " + name);
-		this.destination = name;
+	public DirectMessageWindow(String target, String source, Client c) {
+		super("BJ Chat DM with " + target);
+		this.target = target;
+		this.source = source;
 		this.setLocation(500, 100);
 		this.setSize(300, 400);
 		this.addWindowListener(this);
@@ -38,13 +39,14 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 
 	private void setupGui() {
 		button = new JButton("Send");
-		
 		text = new JTextPane();
-		text.setEditable(false);
-		text.setPreferredSize(new Dimension(100, 300));
-		
 		input = new JTextField();
-		text.setEditable(true);
+		
+		text.setPreferredSize(new Dimension(100, 300));
+		text.setEditable(false);
+		input.setEditable(true);
+		button.addActionListener(this);
+		input.addKeyListener(this);
 		
 		Box wholeH = Box.createHorizontalBox();
 		Box wholeV = Box.createVerticalBox();
@@ -53,6 +55,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 		JScrollPane consolePane = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollBar = consolePane.getVerticalScrollBar();
+		text.setEditable(false);
 		
 		bottom.add(input);
 		bottom.add(Box.createHorizontalStrut(10));
@@ -83,11 +86,11 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	}
 	
 	public String getName() {
-		return destination;
+		return target;
 	}
 	
 	public void sendLine(String line) {
-		
+		text.setText(text.getText() + line + "\n");
 	}
 	
 	///////////////// LISTENER METHODS //////////////////
@@ -95,7 +98,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if(arg0.getKeyCode() == KeyEvent.VK_ENTER && !input.getText().equals("")) {
-			client.sendLine("\\dmmessage " + destination + " " + input.getText());
+			client.sendLine("\\dmmessage " + target + " " + input.getText());
 			input.setText("");
 		}
 	}
@@ -108,7 +111,12 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 
 	// Action Listener
 	@Override
-	public void actionPerformed(ActionEvent arg0) {}
+	public void actionPerformed(ActionEvent arg0) {
+		if(arg0.getSource() == button && !input.getText().equals("")) {
+			client.sendLine("\\dmmessage " + target + " " + input.getText());
+			input.setText("");
+		}
+	}
 
 	// Window Listener
 	@Override
@@ -118,7 +126,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	public void windowClosed(WindowEvent arg0) {}
 
 	@Override
-	public void windowClosing(WindowEvent arg0) {}
+	public void windowClosing(WindowEvent arg0) { client.removeDM(this);}
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {}
