@@ -121,9 +121,20 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 		}
 	}
 	
+	/**
+	 * Closed is used when another client closes this
+	 */
 	public void close() {
-		JOptionPane.showConfirmDialog(null, "Other user has closed this DM Session");
+		JOptionPane.showMessageDialog(null, "Other user has Exited this DM Session.\n Closing");
 		client.removeDM(this);
+		dispose();
+	}
+	
+	/**
+	 * Exit is used when this client is closing the session
+	 */
+	public void exit() {
+		client.sendLine("\\dmclose " + target + " " + source);
 		dispose();
 	}
 

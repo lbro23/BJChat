@@ -172,6 +172,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	public WindowListener createWindowListener() {
 		return new WindowListener() {
 			public void windowClosing(WindowEvent e) {
+				cli.closeAllDM();
 				if(!cli.dead) {
 					cli.sendLine("\\kill");
 				}

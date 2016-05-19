@@ -135,6 +135,7 @@ public class Client extends Thread {
 	public void executeCommand(String[] cmd, boolean user, String rawCommand) {
 		if(eq(cmd[0], "kill")) {
 			try {
+				closeAllDM();
 				toServer.println("\\disconnect");
 				fromServer.close();
 				toServer.close();
@@ -153,6 +154,7 @@ public class Client extends Thread {
 				try{
 					String message = rawCommand.substring(6);
 					message = message.trim();
+					closeAllDM();
 					toServer.println("\\dc");
 					fromServer.close();
 					toServer.close();
@@ -245,6 +247,8 @@ public class Client extends Thread {
 			} else {
 				findDMByName(cmd[2]).close();
 			}
+		} else if(eq(cmd[0], "dmcloseall")) {
+			closeAllDM();
 		}
 		else {
 			if(user) {
@@ -270,6 +274,12 @@ public class Client extends Thread {
 			}
 		}
 		return null;
+	}
+	
+	public void closeAllDM() {
+		for(int i = 0; i < dms.size(); i++) {
+			dms.remove(i).exit();
+		}
 	}
 	
 	public void removeDM(DirectMessageWindow d) { dms.remove(d); }
