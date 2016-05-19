@@ -65,19 +65,19 @@ public class Player {
 		int curCol = c.getCol();
 		int curRow = c.getRow();
 		boolean king = c.isKing();
-		if(team.equals(Color.black)){
+		if(team.equals(Color.black)){ // black is 1, red is 2
 			if(king){
-				if((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam().equals(Color.red)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.red)))))
+				if((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam() == 2 || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam() == 2)))))
 					return true;
 			}
-			return ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam().equals(Color.red)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.red)))));
+			return ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam() == 2 || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam() == 2)))));
 		}else{
 			if(king){
-				if ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam().equals(Color.black)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.black)))))
+				if ((row == curRow+2 && ((col == curCol+2 && board.getPiece(curRow+1, curCol+1).getTeam() == 1 || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam() == 1)))))
 
 					return true;
 			}
-				return ((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam().equals(Color.black)) || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam().equals(Color.black)))));
+				return ((row == curRow-2 && ((col == curCol+2 && board.getPiece(curRow-1, curCol+1).getTeam() == 1 || (col == curCol-2 && board.getPiece(curRow-1, curCol-1).getTeam() == 1)))));
 			
 			}
 		}

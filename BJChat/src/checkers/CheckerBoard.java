@@ -18,9 +18,9 @@ public class CheckerBoard implements Serializable {
 		for(int r = 0; r < 3; r++){//assign black pieces
 			for(int c = 0; c< gameBoard[r].length;c++){
 				if(r%2 == 0 && c%2 == 0){
-					gameBoard[r][c] = new Checker(r, c, Color.black);
+					gameBoard[r][c] = new Checker(r, c, 1); // 1 for black, 2 for red
 				}else if(r%2 != 0 && c%2 != 0){
-					gameBoard[r][c] = new Checker(r, c, Color.black);
+					gameBoard[r][c] = new Checker(r, c, 1);
 				}
 			}
 		}
@@ -28,9 +28,9 @@ public class CheckerBoard implements Serializable {
 		for(int r = 5; r < gameBoard.length; r++){//assign red pieces
 			for(int c = 0; c< gameBoard[r].length;c++){
 				if(r%2 == 0 && c%2 == 0){
-					gameBoard[r][c] = new Checker(r, c, Color.red);
+					gameBoard[r][c] = new Checker(r, c, 2); // 1 for black, 2 for red
 				}else if(r%2 != 0 && c%2 != 0){
-					gameBoard[r][c] = new Checker(r, c, Color.red);
+					gameBoard[r][c] = new Checker(r, c, 2);
 				}
 			}
 		}
