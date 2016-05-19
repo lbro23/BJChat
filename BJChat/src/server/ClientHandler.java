@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  *
  */
 public class ClientHandler implements Runnable {
-	static final int PING_TIMEOUT = 9999;
+	static final int PING_TIMEOUT = 9999; // hi
 	User user;
 	Server server;
 	

@@ -23,7 +23,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	JTextField input;
 	JButton button;
 	JScrollBar scrollBar;
-	String target, source;
+	String target, source; // hi
 	
 	public DirectMessageWindow(String target, String source, Client c) {
 		super("BJ Chat DM with " + target);

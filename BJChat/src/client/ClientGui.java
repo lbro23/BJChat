@@ -39,7 +39,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	int port = 4445;
 	JScrollBar scrollBar;
 	boolean autoscroll =true;
-	
+	 // hi
 	public ClientGui(){
 		super("BJ Chat");
 		this.setLocation(700, 100);

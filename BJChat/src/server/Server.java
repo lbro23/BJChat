@@ -24,7 +24,7 @@ public class Server extends Thread{
 	boolean running;
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
-	File banList;
+	File banList;// hi
 	
 	public Server(int port, ServerGui gui) {
 		try {

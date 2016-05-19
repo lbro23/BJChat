@@ -21,7 +21,7 @@ public class Client extends Thread {
 	ClientGui gui;
 	
 	String input;
-	boolean newInput;
+	boolean newInput; // hi
 	boolean running;
 	
 	// For Ping
