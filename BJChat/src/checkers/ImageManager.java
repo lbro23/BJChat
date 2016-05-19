@@ -31,4 +31,36 @@ public class ImageManager {
 		
 	public ImageIcon getEmptyBlack() { return emptyBlack; }
 	public ImageIcon getEmptyWhite() { return emptyWhite; }
+	
+	public ImageIcon getCheckerImage(Checker c, boolean selected) {
+		if(c.getTeam() == 1 ) { // 1 is black, 2 is red
+			if(c.isKing()) {
+				if(selected) {
+					return blackQueenSelected;
+				} else {
+					return blackQueen;
+				}
+			} else {
+				if(selected) {
+					return blackSelected;
+				} else {
+					return black;
+				}
+			}
+		} else {
+			if(c.isKing()) {
+				if(selected) {
+					return redQueenSelected;
+				} else {
+					return redQueen;
+				}
+			} else {
+				if(selected) {
+					return redSelected;
+				} else {
+					return red;
+				}
+			}
+		}
+	}
 }

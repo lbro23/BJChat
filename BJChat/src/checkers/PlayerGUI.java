@@ -77,14 +77,17 @@ public class PlayerGUI extends JFrame {
 						buttons[r][c].setIcon(manager.getEmptyWhite());
 					}
 				} else {
-					
+					buttons[r][c].setIcon(manager.getCheckerImage(check, false));
 				}
 			}
 		}
 	}
 	
 	public static void main(String[] args ){
-		new PlayerGUI();
+		CheckerBoard board = new CheckerBoard();
+		PlayerGUI gui = new PlayerGUI();
+		
+		gui.updateBoard(board);
 	}
 
 }
