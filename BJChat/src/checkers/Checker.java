@@ -3,6 +3,7 @@ package checkers;
 import java.awt.Color;
 
 public class Checker {
+	
 	boolean king = false;
 	Color team;
 	int row;
@@ -23,6 +24,11 @@ public class Checker {
 	public void move(char newRow, int newCol){
 		row = newRow;
 		col = newCol;
+	}
+	
+	public boolean equals(Object other){
+		Checker o = (Checker)other;
+		return row == o.row && col == o.col && team == o.team;
 	}
 
 }
