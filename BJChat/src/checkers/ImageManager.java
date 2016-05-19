@@ -24,16 +24,27 @@ public class ImageManager {
 		emptyBlackSelected  = new ImageIcon(getClass().getResource("EmptyBlackSelected.png"));
 		emptyWhite = new ImageIcon(getClass().getResource("EmptyWhite.png"));
 		red = new ImageIcon(getClass().getResource("Red.png"));
-		redQueen = new ImageIcon(getClass().getResource("RedSelected.png"));
-		redQueenSelected = new ImageIcon(getClass().getResource("RedQueen.png"));
-		redSelected  = new ImageIcon(getClass().getResource("RedQueenSelected.png"));
+		redQueen = new ImageIcon(getClass().getResource("RedQueen.png"));
+		redQueenSelected = new ImageIcon(getClass().getResource("RedQueenSelected.png"));
+		redSelected  = new ImageIcon(getClass().getResource("RedSelected.png"));
 	}
 		
 	public ImageIcon getEmptyBlack() { return emptyBlack; }
 	public ImageIcon getEmptyWhite() { return emptyWhite; }
 	
+	public ImageIcon getEmptyBlack(boolean selected) {
+		if(selected) return emptyBlackSelected;
+		else return emptyBlack;
+	}
+	
 	public ImageIcon getCheckerImage(Checker c, boolean selected) {
-		if(c.getTeam() == 1 ) { // 1 is black, 2 is red
+		if(c == null) {
+			if(selected) {
+				return emptyBlackSelected;
+			} else {
+				return emptyBlack;
+			}
+		} else if(c.getTeam() == 1 ) { // 1 is black, 2 is red
 			if(c.isKing()) {
 				if(selected) {
 					return blackQueenSelected;

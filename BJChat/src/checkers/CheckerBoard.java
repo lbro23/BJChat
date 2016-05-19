@@ -4,12 +4,7 @@ import java.awt.Color;
 import java.io.Serializable;
 
 public class CheckerBoard implements Serializable {
-	/**
-	 * 
-	 */
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -8328057335354616348L;
 	Checker[][] gameBoard;
 	
