@@ -11,6 +11,7 @@ import java.awt.event.WindowListener;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -98,6 +99,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		if(arg0.getKeyCode() == KeyEvent.VK_ENTER && !input.getText().equals("")) {
+			println(source + ": " + input.getText());
 			client.sendLine("\\dmmessage " + target + " " + input.getText());
 			input.setText("");
 		}
@@ -113,9 +115,16 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource() == button && !input.getText().equals("")) {
+			println(source + ": " + input.getText());
 			client.sendLine("\\dmmessage " + target + " " + input.getText());
 			input.setText("");
 		}
+	}
+	
+	public void close() {
+		JOptionPane.showConfirmDialog(null, "Other user has closed this DM Session");
+		client.removeDM(this);
+		dispose();
 	}
 
 	// Window Listener
@@ -126,7 +135,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	public void windowClosed(WindowEvent arg0) {}
 
 	@Override
-	public void windowClosing(WindowEvent arg0) { client.removeDM(this);}
+	public void windowClosing(WindowEvent arg0) { client.sendLine("\\dmclose " + target + " " + source); client.removeDM(this); }
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {}

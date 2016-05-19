@@ -197,10 +197,12 @@ public class Client extends Thread {
 				gui.cleanConsole("Console Cleaned: Server Command");
 			}
 		} else if(eq(cmd[0], "userupdate")){
-			if(!user)
-				updateUsers(rawCommand.substring(12)); // hi
+			if(!user) {
+				updateUsers(rawCommand.substring(12));
+			}
 		} else if(eq(cmd[0], "dm")) { // COMMAND FORMAT "\\dm TO FROM" 
 			if(user) {
+				if(cmd.length != 2) gui.println("Incorrect Command Format! Try \\dm USERNAME");
 				toServer.println("\\dm " + cmd[1] + " " + userName); // request to start DM
 				gui.println("DM Request Sent, waiting for " + cmd[1] + " to accept.");
 			} else {
@@ -219,8 +221,9 @@ public class Client extends Thread {
 					gui.println(cmd[2] + " has rejected your DM request!" );
 				}
 			}
-		} else if(eq(cmd[0], "dmmessage")) { // COMMAND FORMAT "\\dmmessage DESTINATION MESSAGE"
+		} else if(eq(cmd[0], "dmmessage") || eq(cmd[0], "whisper")) { // COMMAND FORMAT "\\dmmessage DESTINATION MESSAGE"
 			if(user) {
+				
 				String message = "\\dmmessage " + cmd[1] + " " + userName;
 				for(int i = 2; i < cmd.length; i++) { message += " " + cmd[i]; }
 				toServer.println(message);
@@ -235,6 +238,12 @@ public class Client extends Thread {
 				} else {
 					gui.println("<WHISPER> " + cmd[2] + ": " + message);
 				}
+			}
+		} else if(eq(cmd[0], "dmclose" ) ) {
+			if(user) {
+				toServer.println(rawCommand);
+			} else {
+				findDMByName(cmd[2]).close();
 			}
 		}
 		else {
