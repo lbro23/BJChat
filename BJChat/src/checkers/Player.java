@@ -28,5 +28,18 @@ public class Player {
 	
 		
 	}
+	
+	public boolean isValidMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
+		if(team.equals(Color.black)){
+			//do for black moves
+		}else{
+			//check for valid red move
+		}
+		
+	}
+	
+	public void upDateBoard(CheckerBoard newBoard){
+		this.board = newBoard;
+	}
 
 }
