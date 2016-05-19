@@ -98,9 +98,10 @@ public class Player {
 		return false;
 	}
 	
-			
-	
-	
+	public void makeMove(Checker src, int newRow, int newCol) {
+		board = new CheckerBoard(board, src, newRow, newCol);
+		gui.updateBoard(board);
+	}
 	
 	public void updateBoard(CheckerBoard newBoard){
 		this.board = newBoard;

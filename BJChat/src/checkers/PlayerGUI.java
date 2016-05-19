@@ -114,16 +114,17 @@ public class PlayerGUI extends JFrame implements ActionListener{
 							selected[1] = c;
 							updateBoard();
 						} else { // second selection
-							selected[2] = r;
-							selected[3] = c;
+							int row = r;
+							int col = c;
 							updateBoard();
 							Checker check = lastBoard.getPiece(selected[0], selected[1]);
 							if(check == null) {
 								invalidMove();
 								return;
-							} else if(player.isValidCaptureMove(check,  selected[2],  selected[3]) 
-								|| player.isValidPlebMove(check, selected[2], selected[3])) {
-								// TODO SEND MOVE TO PLAYER!
+							} else if(player.isValidCaptureMove(check,  row,  col) 
+								|| player.isValidPlebMove(check, row, col)) {
+								for(int i = 0; i < 4; i++) { selected[i] = -1; }
+								player.makeMove(check, row, col);
 							} else {
 								invalidMove();
 								return;

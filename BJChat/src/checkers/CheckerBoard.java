@@ -32,6 +32,17 @@ public class CheckerBoard implements Serializable {
 		
 		
 	}//end constructor
+	
+	/**
+	 * Create a new checker board based on another checker board
+	 * execute the move below
+	 */
+	public CheckerBoard(CheckerBoard other, Checker src, int r2, int c2) {
+		gameBoard = other.gameBoard;
+		gameBoard[src.getRow()][src.getCol()] = null;
+		gameBoard[r2][c2] = src;
+		src.move(r2, c2);
+	}
 
 	public Checker getPiece(int i, int j) {
 		return gameBoard[i][j];

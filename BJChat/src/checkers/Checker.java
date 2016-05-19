@@ -21,7 +21,7 @@ public class Checker {
 	public int getCol(){return col;}
 	public int getTeam(){return team;}
 	
-	public void move(char newRow, int newCol){
+	public void move(int newRow, int newCol){
 		row = newRow;
 		col = newCol;
 	}
