@@ -129,6 +129,11 @@ public class ClientHandler implements Runnable {
 		return user;
 	}
 	
+	public void updatePing() {
+		user.setMostRecentPing(-1); // clears value
+		sayToClient("\\ping");
+	}
+	
 	public long getLastConnectTime() { return lastConnectTime; }
 	
 

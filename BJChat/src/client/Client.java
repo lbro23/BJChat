@@ -92,6 +92,7 @@ public class Client extends Thread {
 						e.printStackTrace();
 					}
 				}
+				toServer.println("\\ping " + timeElapsed);
 			}
 			
 			try{ Thread.sleep(1); }
@@ -168,11 +169,7 @@ public class Client extends Thread {
 			}
 		}
 		else if(eq(cmd[0], "ping")) {
-			if(user) {
-				pingServer();
-			} else {
-				toServer.println("\\pingresponse");
-			}
+			pingServer();
 		} else if(eq(cmd[0], "pingresponse")) {
 			if(user) {
 				gui.println("Incorrect Command: Did you mean \\ping?");

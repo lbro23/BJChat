@@ -158,8 +158,7 @@ public class Server extends Thread{
 	
 	/**
 	 * List of Available Server Commands
-	 * pingall: pings all clients, updates user list
-	 * updateusres: pings all clients, updates user list
+	 * updateusers: pings all clients, updates user list
 	 * kill CLIENTNAME: kills the client with name CLIENTNAME
 	 * kick CLIENTNAME MESSAGE: kicks the client with name CLIENTNAME, with pop-up MESSAGE
 	 * setpassword NEWPASSWORD: sets the server's administrator password

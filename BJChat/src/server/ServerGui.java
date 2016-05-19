@@ -179,8 +179,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	
 	public void showHelp() {
 		String help = "List of Available Server Commands\n" +
-				 "\\pingall: pings all clients, updates user list\n" +
-				 "\\updateusres: pings all clients, updates user list\n" +
+				 "\\updateusers: updates user list for clients\n" +
 				 "\\kill CLIENTNAME: kills the client with name CLIENTNAME\n" +
 				 "\\kick CLIENTNAME MESSAGE: kicks the client with name CLIENTNAME, with pop-up MESSAGE\n" +
 				 "\\setpassword NEWPASSWORD: sets the servers administrator password\n" +
