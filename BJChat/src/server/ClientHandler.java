@@ -44,7 +44,7 @@ public class ClientHandler implements Runnable {
 					long timeElapsed = System.currentTimeMillis() - pingStartTime;
 					if(timeElapsed > PING_TIMEOUT) { user.setMostRecentPing(9999); }
 				}
-			}
+			} // hi
 		} catch (NoSuchElementException e) {}
 	}
 	
