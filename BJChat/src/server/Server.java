@@ -117,7 +117,6 @@ public class Server extends Thread{
 	}
 	
 	public void updateUsers() {
-		refreshPing();
 		String admin = getUsers(true);
 		String muggle = getUsers(false);
 		for(ClientHandler c: clients) {
@@ -157,12 +156,6 @@ public class Server extends Thread{
 		}
 	}
 	
-	public void refreshPing() {
-		for(ClientHandler c: clients) {
-			c.updatePing();
-		}
-	}
-	
 	/**
 	 * List of Available Server Commands
 	 * pingall: pings all clients, updates user list
@@ -178,7 +171,6 @@ public class Server extends Thread{
 	 */
 	public void executeCommand(String[] cmd) {
 		if (eq(cmd[0], "pingall") || eq(cmd[0], "updateusers")) {
-			refreshPing();
 			updateUsers();
 			gui.println("Updating Users: Pinging All Clients");
 		} else if (eq(cmd[0], "kill")) {

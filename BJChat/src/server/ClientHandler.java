@@ -14,7 +14,6 @@ public class ClientHandler implements Runnable {
 	Server server;
 	
 	volatile boolean awaitingPingResponse;
-	volatile long pingStartTime;
 	volatile long lastConnectTime;
 	
 	boolean running; // used to stop infinite loop
@@ -39,10 +38,6 @@ public class ClientHandler implements Runnable {
 					executeCommand(cmd, message);
 				} else {
 					server.sayToAllClients(message);
-				}
-				if(awaitingPingResponse) {
-					long timeElapsed = System.currentTimeMillis() - pingStartTime;
-					if(timeElapsed > PING_TIMEOUT) { user.setMostRecentPing(9999); }
 				}
 			} // hi
 		} catch (NoSuchElementException e) {}
@@ -73,19 +68,18 @@ public class ClientHandler implements Runnable {
 		} else if(eq(cmd[0], "dc")) {
 			close();
 		} else if(eq(cmd[0], "ping")) {
-			sayToClient("\\pingresponse");
+			if(cmd.length > 1) {
+				user.setMostRecentPing(Integer.parseInt(cmd[1]));
+			} else {
+				sayToClient("\\pingresponse");
+			}
 		} else if(eq(cmd[0], "changename")) {
 			String old = user.getName();
 			user.changeName(cmd[1]);
 			server.sayToAllClients(old + " has changed their name to " + cmd[1]);
 			server.updateUsers();
 		} else if(eq(cmd[0], "pingresponse")) {
-			if(awaitingPingResponse) {
-				awaitingPingResponse = false;
-				int timeElapsed = (int)(System.currentTimeMillis() - pingStartTime);
-				user.setMostRecentPing(timeElapsed);
-				server.sayToConsole("Ping " + user.getHostName() + " , result " + timeElapsed);
-			}
+			// NOTHING
 		} else if(eq(cmd[0], "admin")){
 			if(cmd.length != 2) {
 				sayToClient("Incorrect Command Format: Try \\admin ADMINPASSWORD");
@@ -133,11 +127,6 @@ public class ClientHandler implements Runnable {
 	
 	public User getUser() {
 		return user;
-	}
-	
-	public void updatePing() {
-		pingStartTime = System.currentTimeMillis();
-		awaitingPingResponse = true;
 	}
 	
 	public long getLastConnectTime() { return lastConnectTime; }

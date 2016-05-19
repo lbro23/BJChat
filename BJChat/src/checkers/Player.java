@@ -35,6 +35,7 @@ public class Player {
 		}else{
 			//check for valid red move
 		}
+		return false; // I H8 Errors
 		
 	}
 	
