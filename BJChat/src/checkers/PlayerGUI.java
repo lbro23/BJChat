@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -142,10 +143,5 @@ public class PlayerGUI extends JFrame implements ActionListener{
 		for(int i = 0; i < 4; i++) { selected[i] = -1; }
 		updateBoard();
 		JOptionPane.showMessageDialog(null, "Invalid Move!\nTo see rules, click the help button.");
-	}
-	
-	public static void main(String[] args ){
-		CheckerBoard board = new CheckerBoard();
-		Player p = new Player(Color.BLACK, board);
 	}
 }

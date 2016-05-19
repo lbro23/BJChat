@@ -1,9 +1,11 @@
 package checkers;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class Checker {
+public class Checker implements Serializable{
 	
+	private static final long serialVersionUID = 8539658420459823218L;
 	boolean king = false;
 	int team; // 0 for black, 2 for red
 	int row;

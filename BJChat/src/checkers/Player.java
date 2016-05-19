@@ -1,43 +1,69 @@
 package checkers;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Player {
-	ArrayList<Checker> playersPieces;
+	Socket socket;
+	ObjectOutputStream output;
+	ObjectInputStream input;
 	Color team;
 	CheckerBoard board;
 	PlayerGUI gui;
+	boolean newMove;
 	
 	
-	public Player(Color team, CheckerBoard board){
-		this.team = team;
-		this.board = board;
-		if(team == Color.black){
-			assignBlackTeamPieces();
-		}else{
-			assignRedTeamPieces();
+	public Player(Color team, InetAddress serverAddress, int port, boolean start){
+		try {
+			socket = new Socket(serverAddress, port);
+			output = new ObjectOutputStream(socket.getOutputStream());
+			input = new ObjectInputStream(socket.getInputStream());
+			board = (CheckerBoard)input.readObject();
+			
+			this.team = team;
+			newMove = false;
+			
+			gui = new PlayerGUI(this);
+			gui.updateBoard(board);
+			
+			if(start) {
+				yourTurn();
+			}
+			
+			playGame();
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
-		gui = new PlayerGUI(this);
-		gui.updateBoard(board);
-	}
-
-	private void assignBlackTeamPieces() {
-		
-		
-	}
-
-	private void assignRedTeamPieces() {
-	
-		
 	}
 	
-	public boolean isPlayerPiece(Checker c){
-		for(Checker temp: playersPieces)
-			if(temp.equals(c))
-				return true;
-		return false;
-		
+	public void playGame() {
+		try {
+			while (true) {
+				otherTurn();
+				yourTurn();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void yourTurn() throws InterruptedException, IOException {
+		// TODO Your turn
+		while (!newMove) {
+			Thread.sleep(3);
+		}
+		newMove = false;
+		output.writeObject(board);
+	}
+	
+	public void otherTurn() throws ClassNotFoundException, IOException {
+		// TODO Other player's turn
+		board = (CheckerBoard)input.readObject();
 	}
 	
 	public boolean isValidPlebMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
@@ -101,6 +127,7 @@ public class Player {
 	public void makeMove(Checker src, int newRow, int newCol) {
 		board = new CheckerBoard(board, src, newRow, newCol);
 		gui.updateBoard(board);
+		newMove = true;
 	}
 	
 	public void updateBoard(CheckerBoard newBoard){
