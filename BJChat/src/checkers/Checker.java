@@ -18,6 +18,7 @@ public class Checker {
 	public boolean isKing(){return king;}
 	public int getRow(){return row;}
 	public int getCol(){return col;}
+	public Color getTeam(){return team;}
 	
 	public void move(char newRow, int newCol){
 		row = newRow;
