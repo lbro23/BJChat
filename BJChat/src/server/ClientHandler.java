@@ -39,7 +39,8 @@ public class ClientHandler implements Runnable {
 				} else {
 					server.sayToAllClients(message);
 				}
-			} // hi
+				lastConnectTime = System.currentTimeMillis();
+			}
 		} catch (NoSuchElementException e) {}
 	}
 	
