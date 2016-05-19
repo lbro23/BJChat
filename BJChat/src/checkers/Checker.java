@@ -25,6 +25,11 @@ public class Checker {
 		row = newRow;
 		col = newCol;
 	}
+	
+	public boolean equals(Object other){
+		Checker o = (Checker)other;
+		return row == o.row && col == o.col && team == o.team;
+	}
 
 }
 

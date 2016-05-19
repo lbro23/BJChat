@@ -29,6 +29,14 @@ public class Player {
 		
 	}
 	
+	public boolean isPlayerPiece(Checker c){
+		for(Checker temp: playersPieces)
+			if(temp.equals(c))
+				return true;
+		return false;
+		
+	}
+	
 	public boolean isValidPlebMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
 		int curCol = c.getCol();
 		int curRow = c.getRow();
