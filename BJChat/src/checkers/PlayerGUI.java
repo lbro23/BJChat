@@ -26,8 +26,8 @@ public class PlayerGUI extends JFrame implements ActionListener{
 	CheckerBoard lastBoard;
 	int[] selected; // two selected buttons (r1, c1, r2, c2)
 	
-	public PlayerGUI(Player player) {
-		super("BJ Chat Checkers");
+	public PlayerGUI(Player player, String name) {
+		super(name);
 		setBounds(100, 50, 680, 720);
 		manager = new ImageManager();
 		this.player = player;
@@ -137,6 +137,22 @@ public class PlayerGUI extends JFrame implements ActionListener{
 			}
 		}
 		
+	}
+	
+	public void enable() {
+		for(int r = 0; r < 8; r++) {
+			for(int c = 0; c < 8; c++) {
+				if(r%2 == c%2) buttons[r][c].setEnabled(true);
+			}
+		}
+	}
+	
+	public void disable() {
+		for(int r = 0; r < 8; r++) {
+			for(int c = 0; c < 8; c++) {
+				if(r%2 == c%2) buttons[r][c].setEnabled(false);
+			}
+		}
 	}
 	
 	private void invalidMove() {

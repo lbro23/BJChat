@@ -28,12 +28,13 @@ public class Player {
 			this.team = team;
 			newMove = false;
 			
-			gui = new PlayerGUI(this);
+			gui = new PlayerGUI(this, "BJ Chat Checkers " + start);
 			gui.updateBoard(board);
 			
 			if(start) {
+				gui.enable();
 				yourTurn();
-			}
+			} else gui.disable();
 			
 			playGame();
 		} catch(Exception e) {
@@ -54,9 +55,11 @@ public class Player {
 	
 	public void yourTurn() throws InterruptedException, IOException {
 		// TODO Your turn
+		gui.enable();
 		while (!newMove) {
 			Thread.sleep(3);
 		}
+		gui.disable();
 		newMove = false;
 		output.writeObject(board);
 	}
@@ -64,6 +67,8 @@ public class Player {
 	public void otherTurn() throws ClassNotFoundException, IOException {
 		// TODO Other player's turn
 		board = (CheckerBoard)input.readObject();
+		System.out.println("Board Received");
+		gui.updateBoard(board);
 	}
 	
 	public boolean isValidPlebMove(Checker c, int row, int col){//checks to see if the checker can move to the next space

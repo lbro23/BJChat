@@ -42,6 +42,7 @@ public class CheckersGame {
 					s = null;
 				}
 			}
+			playersTurn = 1;
 
 			p1Input = new ObjectInputStream(p1.getInputStream());
 			p1Output = new ObjectOutputStream(p1.getOutputStream());
@@ -113,7 +114,10 @@ public class CheckersGame {
 		
 		Thread player2 = new Thread() {
 			public void run() {
-				Player p2 = new Player(Color.RED, local, 4456, false);
+				try {
+					Thread.sleep(1000);
+					Player p2 = new Player(Color.RED, local, 4456, false);
+				} catch (Exception e) { e.printStackTrace(); }
 			}
 		};
 		server.start();
