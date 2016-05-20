@@ -6,7 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 public class Player {
 	Socket socket;
@@ -17,6 +20,8 @@ public class Player {
 	CheckerBoard board;
 	PlayerGUI gui;
 	boolean newMove;
+	boolean stop;
+	boolean closed = false;
 	
 	
 	public Player(Color team, InetAddress serverAddress, int port, boolean start){
@@ -47,10 +52,12 @@ public class Player {
 	
 	public void playGame() {
 		try {
-			while (true) {
+			while (!stop) {
 				otherTurn();
 				yourTurn();
 			}
+		} catch (SocketException e) {
+			// SWALLOW
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,9 +75,8 @@ public class Player {
 	}
 	
 	public void otherTurn() throws ClassNotFoundException, IOException {
-		// TODO Other player's turn
 		board = (CheckerBoard)input.readObject();
-		System.out.println("Board Received");
+		if(board == null) { close(); stop = true; exit(); return;}
 		gui.updateBoard(board);
 	}
 	
@@ -157,6 +163,23 @@ public class Player {
 	
 	public void updateBoard(CheckerBoard newBoard){
 		this.board = newBoard;
+	}
+	
+	public void close() {
+		if(closed) return;
+		try {
+			output.writeObject(null);
+			input.close();
+			output.close();
+			socket.close();
+		} catch(Exception e) { e.printStackTrace(); }
+		closed =true;
+	}
+	
+	public void exit() {
+		gui.dispose();
+		close();
+		JOptionPane.showConfirmDialog(null, "Other User Has RAGE QUIT, Closing!");
 	}
 
 }

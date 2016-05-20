@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.InetAddress;
 
@@ -17,7 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class PlayerGUI extends JFrame implements ActionListener{
+public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 	
 	Player player;
 	JPanel buttonPane;
@@ -40,11 +42,12 @@ public class PlayerGUI extends JFrame implements ActionListener{
 		buttonPane = new JPanel();
 		buttons = new JButton[8][8];
 		
+		super.addWindowListener(this);
 		createButtons(reversed);
 		setupGui();
 		
 		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 	}
 	
@@ -182,4 +185,27 @@ public class PlayerGUI extends JFrame implements ActionListener{
 		updateBoard();
 		JOptionPane.showMessageDialog(null, "Invalid Move!\nTo see rules, click the help button.");
 	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0) {}
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		player.close();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {}
 }
