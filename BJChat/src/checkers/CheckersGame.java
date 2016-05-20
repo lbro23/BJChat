@@ -74,13 +74,16 @@ public class CheckersGame {
 					while (running) {
 						try {
 							board1 = (CheckerBoard) p1Input.readObject();
-						} catch (EOFException e) {
+							if (board1 == null) {
+								close(); running = false; p2Output.writeObject(null);
+								System.out.println("Null Received from P1, Sending to 2");
+							} 
+							newBoard1 = true;
+						} catch (EOFException | SocketException e) {
 							running = false;
 						} catch (ClassNotFoundException | IOException e) {
 							e.printStackTrace();
 						}
-						if (board1 == null) {close(); running = false; } 
-						newBoard1 = true;
 					}
 				}
 			};
@@ -89,13 +92,16 @@ public class CheckersGame {
 					while (running) {
 						try {
 							board2 = (CheckerBoard) p2Input.readObject();
-						} catch (EOFException e) {
+							if (board2 == null) {
+								close(); running = false; p1Output.writeObject(null);
+								System.out.println("Null Received from P2, Sending to 1");
+							}
+							newBoard2 = true;
+						} catch (EOFException | SocketException e) {
 							running = false;
 						} catch (ClassNotFoundException | IOException e) {
 							e.printStackTrace();
 						}
-						if (board1 == null) {close(); running = false; }
-						newBoard2 = true;
 					}
 				}
 			};

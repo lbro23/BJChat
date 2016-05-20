@@ -1,6 +1,7 @@
 package checkers;
 
 import java.awt.Color;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,7 +21,8 @@ public class Player {
 	CheckerBoard board;
 	PlayerGUI gui;
 	boolean newMove;
-	boolean stop;
+	boolean newBoard;
+	boolean running;
 	boolean closed = false;
 	
 	
@@ -31,10 +33,12 @@ public class Player {
 			input = new ObjectInputStream(socket.getInputStream());
 			board = (CheckerBoard)input.readObject();
 			
+			running = true;
 			this.team = team;
 			if(team.equals(Color.BLACK)) teamNum = 1;
 			else teamNum = 2;
 			newMove = false;
+			readInput();
 			
 			gui = new PlayerGUI(this, "BJ Chat Checkers " + start, start);
 			gui.updateBoard(board);
@@ -52,7 +56,7 @@ public class Player {
 	
 	public void playGame() {
 		try {
-			while (!stop) {
+			while (running) {
 				otherTurn();
 				yourTurn();
 			}
@@ -73,10 +77,12 @@ public class Player {
 		newMove = false;
 		output.writeObject(board);
 	}
-	
-	public void otherTurn() throws ClassNotFoundException, IOException {
-		board = (CheckerBoard)input.readObject();
-		if(board == null) { close(); stop = true; exit(); return;}
+
+	public void otherTurn() throws ClassNotFoundException, IOException, InterruptedException {
+		while (!newBoard) {
+			Thread.sleep(3);
+		}
+		newBoard = false;
 		gui.updateBoard(board);
 	}
 	
@@ -128,26 +134,6 @@ public class Player {
 			if (!king && diffR == -2) return false; // if not king and moving backwards
 			return board.getPiece(midRow,  midCol).getTeam() != teamNum;
 		}
-
-//		if (team.equals(Color.black)) { // black is 1, red is 2
-//			if (king) {
-//				if ((row == curRow - 2 && ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 2
-//						|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))))
-//					return true;
-//			}
-//			return ((row == curRow + 2 && ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 2
-//					|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))));
-//		} else {
-//			if (king) {
-//				if ((row == curRow + 2 && ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 1
-//						|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))))
-//
-//					return true;
-//			}
-//			return ((row == curRow - 2 && ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 1
-//					|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))));
-//		}
-
 	}
 	
 	public void makeMove(Checker src, int newRow, int newCol) {
@@ -165,7 +151,29 @@ public class Player {
 		this.board = newBoard;
 	}
 	
+	public void readInput() {
+		Thread t = new Thread() {
+			public void run() {
+				while (running) {
+					try {
+						board = (CheckerBoard) input.readObject();
+						if(board == null) {
+							close();
+						}
+						newBoard = true;
+					} catch (SocketException | EOFException e) {
+						close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		t.start();
+	}
+	
 	public void close() {
+		running = false;
 		if(closed) return;
 		try {
 			output.writeObject(null);
