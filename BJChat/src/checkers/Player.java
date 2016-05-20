@@ -61,16 +61,16 @@ public class Player {
 				yourTurn();
 			}
 		} catch (SocketException e) {
-			// SWALLOW
+			exit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void yourTurn() throws InterruptedException, IOException {
+	public void yourTurn() throws InterruptedException, IOException, SocketException {
 		// TODO Your turn
 		gui.enable();
-		while (!newMove) {
+		while (!newMove && running) {
 			Thread.sleep(3);
 		}
 		gui.disable();
@@ -79,7 +79,7 @@ public class Player {
 	}
 
 	public void otherTurn() throws ClassNotFoundException, IOException, InterruptedException {
-		while (!newBoard) {
+		while (!newBoard && running) {
 			Thread.sleep(3);
 		}
 		newBoard = false;
@@ -188,7 +188,7 @@ public class Player {
 	public void exit() {
 		gui.dispose();
 		close();
-		JOptionPane.showConfirmDialog(null, "Other User Has RAGE QUIT, Closing!");
+		JOptionPane.showMessageDialog(null, "Other User Has RAGE QUIT, Closing!");
 	}
 
 }
