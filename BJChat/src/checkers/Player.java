@@ -159,11 +159,11 @@ public class Player {
 					try {
 						board = (CheckerBoard) input.readObject();
 						if(board == null) {
-							close();
+							exit();
 						}
 						newBoard = true;
 					} catch (SocketException | EOFException e) {
-						close();
+						exit();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
