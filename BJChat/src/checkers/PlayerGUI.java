@@ -58,7 +58,18 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 		Box whole = Box.createVerticalBox();
 		Box topLine = Box.createHorizontalBox();
 		
+		JButton submit = new JButton("Submit move");
+		submit.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(player.getNewMove())
+				player.setSubmit(true);
+				
+			}
+		});
+		
 		topLine.add(label);
+		topLine.add(submit);
 		
 		whole.add(topLine);
 		whole.add(Box.createVerticalStrut(10));
@@ -147,6 +158,7 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 								int col = c;
 								updateBoard();
 								Checker check = lastBoard.getPiece(selected[0], selected[1]);
+								if(!player.getNewMove()){
 								if (check == null) {
 									invalidMove();
 									return;
@@ -159,6 +171,18 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 								} else {
 									invalidMove();
 									return;
+								}
+							} else{
+								//second move
+								if(check == null){
+									invalidMove();
+									return;
+									}else if(player.isValidSecondMove(check, row, col)){
+										player.makeCaptureMove(check, row, col);
+									} else{
+										invalidMove();
+										return;
+									}
 								}
 							}
 						}

@@ -23,10 +23,12 @@ public class Player {
 	CheckerBoard board;
 	PlayerGUI gui;
 	Thread io;
+	boolean userSubmit;
 	boolean newMove;
 	boolean newBoard;
 	boolean running;
 	boolean closed = false;
+	int[] recentCapture = new int[2];//holds position of a checker that recently made a capture
 	
 	
 	public Player(Color team, InetAddress serverAddress, int port, boolean start){
@@ -37,6 +39,7 @@ public class Player {
 			board = (CheckerBoard)input.readObject();
 			
 			running = true;
+			userSubmit = false;
 			this.team = team;
 			if(team.equals(Color.BLACK)) teamNum = 1;
 			else teamNum = 2;
@@ -73,11 +76,12 @@ public class Player {
 	public void yourTurn() throws InterruptedException, IOException, SocketException {
 		// TODO Your turn
 		gui.enable();
-		while (!newMove && running) {
+		while (!userSubmit && running) {
 			Thread.sleep(3);
 		}
 		gui.disable();
 		newMove = false;
+		userSubmit = false;
 		try {
 			output.writeObject(board);
 		} catch(SocketException e) { running = false; }
@@ -142,6 +146,13 @@ public class Player {
 		}
 	}
 	
+	public boolean isValidSecondMove(Checker c, int row, int col){
+		if(c.getRow() == recentCapture[0] && c.getCol() == recentCapture[1]){
+			return isValidCaptureMove(c, row, col);
+		}
+		return false;
+	}
+	
 	public void makeMove(Checker src, int newRow, int newCol) {
 		board = new CheckerBoard(board, src, newRow, newCol);
 		gui.updateBoard(board);
@@ -150,6 +161,8 @@ public class Player {
 	
 	public void makeCaptureMove(Checker src, int newRow, int newCol) {
 		board.removePiece((src.getRow()+newRow)/2, (src.getCol()+newCol)/2);
+		recentCapture[0] = newRow;
+		recentCapture[1] = newCol;
 		makeMove(src, newRow, newCol);
 	}
 	
@@ -201,5 +214,10 @@ public class Player {
 		close();
 		JOptionPane.showMessageDialog(null, "Other User Has RAGE QUIT, Closing!");
 	}
+	
+	public boolean getSubmit(){return userSubmit;}
+	public void setSubmit(boolean u){userSubmit = u;}
+	public boolean getNewMove(){return newMove;}
+	}
 
-}
+
