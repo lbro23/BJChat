@@ -79,6 +79,7 @@ public class Player {
 			int curCol = c.getCol();
 			int curRow = c.getRow();
 			boolean king = c.isKing();
+			if(c.getTeam() != teamNum) return false;
 			if (team.equals(Color.black)) {
 				if (king) {
 					if (row >= 0 && row < 9 && col >= 0 && col < 9
