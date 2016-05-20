@@ -13,6 +13,7 @@ public class Player {
 	ObjectOutputStream output;
 	ObjectInputStream input;
 	Color team;
+	int teamNum;
 	CheckerBoard board;
 	PlayerGUI gui;
 	boolean newMove;
@@ -26,9 +27,11 @@ public class Player {
 			board = (CheckerBoard)input.readObject();
 			
 			this.team = team;
+			if(team.equals(Color.BLACK)) teamNum = 1;
+			else teamNum = 2;
 			newMove = false;
 			
-			gui = new PlayerGUI(this, "BJ Chat Checkers " + start);
+			gui = new PlayerGUI(this, "BJ Chat Checkers " + start, start);
 			gui.updateBoard(board);
 			
 			if(start) {
@@ -98,41 +101,58 @@ public class Player {
 		return false;
 	}
 	
-	public boolean isValidCaptureMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
-		if (board.getPiece(row, col) == null) {
-			int curCol = c.getCol();
-			int curRow = c.getRow();
-			boolean king = c.isKing();
-			if (team.equals(Color.black)) { // black is 1, red is 2
-				if (king) {
-					if ((row == curRow - 2
-							&& ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 2
-									|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))))
-						return true;
-				}
-				return ((row == curRow + 2
-						&& ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 2
-								|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))));
-			} else {
-				if (king) {
-					if ((row == curRow + 2
-							&& ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 1
-									|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))))
+	public boolean isValidCaptureMove(Checker c, int row, int col) {// checks to see if this is a valid move
+		if (c.getTeam() != teamNum) return false; // non matching teams, false
+		if (board.getPiece(row, col) != null) return false; // destination occupied
+		
+		int curCol = c.getCol();
+		int curRow = c.getRow();
+		int midRow = (c.getRow() + row) / 2;
+		int midCol = (c.getCol() + col) / 2;
+		int diffR = c.getRow() - row;
+		int diffC = c.getCol() - col;
+		boolean king = c.isKing();
 
-						return true;
-				}
-				return ((row == curRow - 2
-						&& ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 1
-								|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))));
-			}
+		if (Math.abs(diffC) != 2 || Math.abs(diffR) != 2) return false; // either too close or too far
+
+		if (team.equals(Color.black)) {
+			if (!king && diffR == 2) return false; // if not king and moving backwards
+			return board.getPiece(midRow, midCol).getTeam() != teamNum; // return true if the mid checker is not the same as this checker
+		} else { // RED
+			if (!king && diffR == -2) return false; // if not king and moving backwards
+			return board.getPiece(midRow,  midCol).getTeam() != teamNum;
 		}
-		return false;
+
+//		if (team.equals(Color.black)) { // black is 1, red is 2
+//			if (king) {
+//				if ((row == curRow - 2 && ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 2
+//						|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))))
+//					return true;
+//			}
+//			return ((row == curRow + 2 && ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 2
+//					|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 2)))));
+//		} else {
+//			if (king) {
+//				if ((row == curRow + 2 && ((col == curCol + 2 && board.getPiece(curRow + 1, curCol + 1).getTeam() == 1
+//						|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))))
+//
+//					return true;
+//			}
+//			return ((row == curRow - 2 && ((col == curCol + 2 && board.getPiece(curRow - 1, curCol + 1).getTeam() == 1
+//					|| (col == curCol - 2 && board.getPiece(curRow - 1, curCol - 1).getTeam() == 1)))));
+//		}
+
 	}
 	
 	public void makeMove(Checker src, int newRow, int newCol) {
 		board = new CheckerBoard(board, src, newRow, newCol);
 		gui.updateBoard(board);
 		newMove = true;
+	}
+	
+	public void makeCaptureMove(Checker src, int newRow, int newCol) {
+		board.removePiece((src.getRow()+newRow)/2, (src.getCol()+newCol)/2);
+		makeMove(src, newRow, newCol);
 	}
 	
 	public void updateBoard(CheckerBoard newBoard){

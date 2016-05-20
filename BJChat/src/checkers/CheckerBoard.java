@@ -42,6 +42,18 @@ public class CheckerBoard implements Serializable {
 		gameBoard[src.getRow()][src.getCol()] = null;
 		gameBoard[r2][c2] = src;
 		src.move(r2, c2);
+		checkKing();
+	}
+	
+	private void checkKing() {
+		for(int i = 0; i < 8; i++) {
+			if(gameBoard[0][i] != null && gameBoard[0][i].getTeam() == 2) gameBoard[0][i].makeKing();
+			if(gameBoard[7][i] != null && gameBoard[7][i].getTeam() == 1) gameBoard[7][i].makeKing();
+		}
+	}
+	
+	public void removePiece(int r, int c) {
+		gameBoard[r][c] = null;
 	}
 
 	public Checker getPiece(int i, int j) {

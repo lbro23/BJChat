@@ -22,11 +22,13 @@ public class PlayerGUI extends JFrame implements ActionListener{
 	Player player;
 	JPanel buttonPane;
 	JButton[][] buttons;
+	JLabel label;
 	ImageManager manager;
 	CheckerBoard lastBoard;
 	int[] selected; // two selected buttons (r1, c1, r2, c2)
+	boolean enabled = false;
 	
-	public PlayerGUI(Player player, String name) {
+	public PlayerGUI(Player player, String name, boolean reversed) {
 		super(name);
 		setBounds(100, 50, 680, 720);
 		manager = new ImageManager();
@@ -38,7 +40,7 @@ public class PlayerGUI extends JFrame implements ActionListener{
 		buttonPane = new JPanel();
 		buttons = new JButton[8][8];
 		
-		createButtons();
+		createButtons(reversed);
 		setupGui();
 		
 		setResizable(false);
@@ -47,12 +49,13 @@ public class PlayerGUI extends JFrame implements ActionListener{
 	}
 	
 	public void setupGui() {
+		label = new JLabel("Initializing...");
 		buttonPane.setBackground(Color.YELLOW);
 		buttonPane.setLayout(new GridLayout(8, 8, 5, 5));
 		Box whole = Box.createVerticalBox();
 		Box topLine = Box.createHorizontalBox();
 		
-		topLine.add(new JLabel("Hello World"));
+		topLine.add(label);
 		
 		whole.add(topLine);
 		whole.add(Box.createVerticalStrut(10));
@@ -61,20 +64,39 @@ public class PlayerGUI extends JFrame implements ActionListener{
 		this.add(whole);
 	}
 	
-	public void createButtons() {
-		for(int r = 0; r < 8; r++) {
-			for(int c = 0; c < 8; c++) {
-				buttons[r][c] = new JButton("");
-				buttonPane.add(buttons[r][c]);
-				buttons[r][c].addActionListener(this);
+	public void createButtons(boolean reversed) {
+		if (reversed) {
+			for (int r = 7; r >= 0; r--) {
+				for (int c = 0; c < 8; c++) {
+					buttons[r][c] = new JButton("");
+					buttonPane.add(buttons[r][c]);
+					buttons[r][c].addActionListener(this);
 
-				if(r % 2 == c % 2) {
-					buttons[r][c].setIcon(manager.getEmptyBlack());
-					buttons[r][c].setBackground(Color.BLACK);
-				} else {
-					buttons[r][c].setIcon(manager.getEmptyWhite());
-					buttons[r][c].setBackground(Color.WHITE);
-					buttons[r][c].setEnabled(false);
+					if (r % 2 == c % 2) {
+						buttons[r][c].setIcon(manager.getEmptyBlack());
+						buttons[r][c].setBackground(Color.BLACK);
+					} else {
+						buttons[r][c].setIcon(manager.getEmptyWhite());
+						buttons[r][c].setBackground(Color.WHITE);
+						buttons[r][c].setEnabled(false);
+					}
+				}
+			}
+		} else {
+			for (int r = 0; r < 8; r++) {
+				for (int c = 0; c < 8; c++) {
+					buttons[r][c] = new JButton("");
+					buttonPane.add(buttons[r][c]);
+					buttons[r][c].addActionListener(this);
+
+					if (r % 2 == c % 2) {
+						buttons[r][c].setIcon(manager.getEmptyBlack());
+						buttons[r][c].setBackground(Color.BLACK);
+					} else {
+						buttons[r][c].setIcon(manager.getEmptyWhite());
+						buttons[r][c].setBackground(Color.WHITE);
+						buttons[r][c].setEnabled(false);
+					}
 				}
 			}
 		}
@@ -99,40 +121,46 @@ public class PlayerGUI extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		for(int r = 0; r < 8; r++) {
-			for(int c = 0; c < 8; c++) {
-				if(buttons[r][c] == arg0.getSource()) {
-					if(selected[0] == r && selected[1] == c) { // already selected first, erase both selections
-						for(int i = 0; i < 4; i++) { selected[i] = -1; }
-						updateBoard();
-					}else if (selected[2] == r && selected[3] == c) { // already selected second
-						selected[2] = -1;
-						selected[3] = -1;
-						updateBoard();
-					} else { // new selection
-						if(selected[0] == -1) { // first selection
-							selected[0] = r;
-							selected[1] = c;
+		if(enabled) {
+			for (int r = 0; r < 8; r++) {
+				for (int c = 0; c < 8; c++) {
+					if (buttons[r][c] == arg0.getSource()) {
+						if (selected[0] == r && selected[1] == c) { // already selected, erase selections
+							for (int i = 0; i < 4; i++) {
+								selected[i] = -1;
+							}
 							updateBoard();
-						} else { // second selection
-							int row = r;
-							int col = c;
+						} else if (selected[2] == r && selected[3] == c) { // already selected second
+							selected[2] = -1;
+							selected[3] = -1;
 							updateBoard();
-							Checker check = lastBoard.getPiece(selected[0], selected[1]);
-							if(check == null) {
-								invalidMove();
-								return;
-							} else if(player.isValidCaptureMove(check,  row,  col) 
-								|| player.isValidPlebMove(check, row, col)) {
-								for(int i = 0; i < 4; i++) { selected[i] = -1; }
-								player.makeMove(check, row, col);
-							} else {
-								invalidMove();
-								return;
+						} else { // new selection
+							if (selected[0] == -1) { // first selection
+								selected[0] = r;
+								selected[1] = c;
+								updateBoard();
+							} else { // second selection
+								int row = r;
+								int col = c;
+								updateBoard();
+								Checker check = lastBoard.getPiece(selected[0], selected[1]);
+								if (check == null) {
+									invalidMove();
+									return;
+								} else if (player.isValidCaptureMove(check, row, col)) {
+									for (int i = 0; i < 4; i++) { selected[i] = -1; }
+									player.makeCaptureMove(check, row, col);
+								} else if(player.isValidPlebMove(check, row, col)) {
+									for (int i = 0; i < 4; i++) { selected[i] = -1; }
+									player.makeMove(check, row, col);
+								} else {
+									invalidMove();
+									return;
+								}
 							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}
@@ -140,19 +168,13 @@ public class PlayerGUI extends JFrame implements ActionListener{
 	}
 	
 	public void enable() {
-		for(int r = 0; r < 8; r++) {
-			for(int c = 0; c < 8; c++) {
-				if(r%2 == c%2) buttons[r][c].setEnabled(true);
-			}
-		}
+		enabled = true;
+		label.setText("Make your move");
 	}
 	
 	public void disable() {
-		for(int r = 0; r < 8; r++) {
-			for(int c = 0; c < 8; c++) {
-				if(r%2 == c%2) buttons[r][c].setEnabled(false);
-			}
-		}
+		enabled = false;
+		label.setText("Waiting for other player...");
 	}
 	
 	private void invalidMove() {
