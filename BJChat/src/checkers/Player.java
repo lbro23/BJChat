@@ -11,7 +11,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-
+//this is stupid
 public class Player {
 	Socket socket;
 	ObjectOutputStream output;
