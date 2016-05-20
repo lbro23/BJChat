@@ -9,8 +9,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CheckersGame {
+	boolean closed = false;
 	int playersTurn;
 	CheckerBoard board;
 	ServerSocket serverSocket;
@@ -28,12 +31,13 @@ public class CheckersGame {
 	ObjectInputStream p2Input;
 	CheckerBoard board2;
 	boolean newBoard2;
-	
+	Set<Thread> threads;
 	boolean running;
 
 	
 	public CheckersGame(InetAddress player1, InetAddress player2, int port){
 		try{
+			threads = new HashSet<Thread>();
 			serverSocket = new ServerSocket(port);
 			
 			// connect
@@ -71,16 +75,18 @@ public class CheckersGame {
 		try {
 			Thread t1 = new Thread() {
 				public void run() {
-					while (running) {
+					while (running && !interrupted()) {
 						try {
 							board1 = (CheckerBoard) p1Input.readObject();
 							if (board1 == null) {
-								close(); running = false; p2Output.writeObject(null);
-								System.out.println("Null Received from P1, Sending to 2");
+								System.out.println("Received Null From P1");
+								p2Output.writeObject(null);
+								close(); break;
 							} 
 							newBoard1 = true;
 						} catch (EOFException | SocketException e) {
 							running = false;
+							break;
 						} catch (ClassNotFoundException | IOException e) {
 							e.printStackTrace();
 						}
@@ -89,12 +95,13 @@ public class CheckersGame {
 			};
 			Thread t2 = new Thread() {
 				public void run() {
-					while (running) {
+					while (running && !interrupted()) {
 						try {
 							board2 = (CheckerBoard) p2Input.readObject();
 							if (board2 == null) {
-								close(); running = false; p1Output.writeObject(null);
-								System.out.println("Null Received from P2, Sending to 1");
+								System.out.println("Received Null From P2");
+								p1Output.writeObject(null);
+								close(); break;
 							}
 							newBoard2 = true;
 						} catch (EOFException | SocketException e) {
@@ -106,7 +113,11 @@ public class CheckersGame {
 				}
 			};
 				t1.start();
+				t1.setName("Server P1 Handler");
+				threads.add(t1);
 				t2.start();
+				t2.setName("Server P2 Handler");
+				threads.add(t2);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
@@ -122,17 +133,25 @@ public class CheckersGame {
 	}
 	
 	private void close() {
-		try { 
-			p1Input.close();
-			p1Output.close();
-			p2Input.close();
-			p2Output.close();
-			
-			p1.close();
-			p2.close();
-			
-			serverSocket.close();
-		} catch(Exception e) {e.printStackTrace();}
+		if (!closed) {
+			try {
+				running = false;
+				p1Input.close();
+				p1Output.close();
+				p2Input.close();
+				p2Output.close();
+
+				p1.close();
+				p2.close();
+
+				serverSocket.close();
+				//for(Thread t: threads) t.interrupt();
+				System.out.println("Server Closed");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		closed = true;
 	}
 
 	private void updateOtherPlayer(int player) {
@@ -163,19 +182,19 @@ public class CheckersGame {
 	
 	public static void main(String[] args) {
 		InetAddress local = InetAddress.getLoopbackAddress();
-		Thread server = new Thread() {
+		Thread server = new Thread() { // thread 1
 			public void run() {
 				CheckersGame game = new CheckersGame(local, local, 4456);
 			}
 		};
 
-		Thread player1 = new Thread() {
+		Thread player1 = new Thread() { // thread 2
 			public void run() {
 				Player p1 = new Player(Color.BLACK, local, 4456, true);
 			}
 		};
 
-		Thread player2 = new Thread() {
+		Thread player2 = new Thread() { // thread 3
 			public void run() {
 				try {
 					Thread.sleep(1000);
@@ -186,8 +205,22 @@ public class CheckersGame {
 			}
 		};
 		server.start();
+		server.setName("Server Main");
 		player1.start();
+		player1.setName("Player 1 Main");
 		player2.start();
+		player2.setName("Player 2 Main");
+		
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		for (Thread t : threadSet) {
+			System.out.println(t.getName()); 
+		}
 	}
 
 }

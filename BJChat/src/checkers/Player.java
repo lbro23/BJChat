@@ -9,6 +9,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 //this is stupid
@@ -20,6 +22,7 @@ public class Player {
 	int teamNum;
 	CheckerBoard board;
 	PlayerGUI gui;
+	Thread io;
 	boolean newMove;
 	boolean newBoard;
 	boolean running;
@@ -61,7 +64,7 @@ public class Player {
 				yourTurn();
 			}
 		} catch (SocketException e) {
-			exit();
+			running = false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,7 +78,9 @@ public class Player {
 		}
 		gui.disable();
 		newMove = false;
-		output.writeObject(board);
+		try {
+			output.writeObject(board);
+		} catch(SocketException e) { running = false; }
 	}
 
 	public void otherTurn() throws ClassNotFoundException, IOException, InterruptedException {
@@ -155,34 +160,40 @@ public class Player {
 	public void readInput() {
 		Thread t = new Thread() {
 			public void run() {
-				while (running) {
+				while (running && !isInterrupted()) {
 					try {
 						board = (CheckerBoard) input.readObject();
 						if(board == null) {
+							System.out.println("Null Board Received, Exiting");
 							exit();
+							break;
 						}
 						newBoard = true;
 					} catch (SocketException | EOFException e) {
-						exit();
+						break;
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		};
+		t.setName("Player Read Input" + team.toString());
+		io = t;
 		t.start();
 	}
 	
 	public void close() {
 		running = false;
 		if(closed) return;
+		else closed = true;
 		try {
 			output.writeObject(null);
 			input.close();
 			output.close();
 			socket.close();
-		} catch(Exception e) { e.printStackTrace(); }
-		closed =true;
+			io.interrupt();
+		} catch(Exception e) {  }
+		System.out.println("Closing Player");
 	}
 	
 	public void exit() {
