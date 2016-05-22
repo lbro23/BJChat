@@ -10,10 +10,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import checkers.CheckersGame;
 
 public class Server extends Thread{
 	static final int defaultPort = 4445;
@@ -25,6 +28,7 @@ public class Server extends Thread{
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
 	File banList;// hi
+	int nextAvailablePort = 4446;
 	
 	public Server(int port, ServerGui gui) {
 		try {
@@ -254,6 +258,11 @@ public class Server extends Thread{
 			}
 		}
 		return null;
+	}
+	
+	public int startCheckersGame(InetAddress p1, InetAddress p2) {
+		new CheckersGame(p1, p2, nextAvailablePort);
+		return nextAvailablePort++;
 	}
 	
 	/**

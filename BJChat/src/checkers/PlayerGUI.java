@@ -117,6 +117,7 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 	}
 	
 	public void updateBoard(CheckerBoard board) {
+		if(board == null) {player.close(); return; }
 		lastBoard = board;
 		for(int r = 0; r < 8; r++) {
 			for(int c = 0; c < 8; c++) {
@@ -192,6 +193,16 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 			}
 		}
 		
+	}
+	
+	public void victory() {
+		JOptionPane.showMessageDialog(null, "Congratulations! You Won!");
+		this.dispose();
+	}
+	
+	public void loss() {
+		JOptionPane.showMessageDialog(null, "You Lose");
+		this.dispose();
 	}
 	
 	public void enable() {

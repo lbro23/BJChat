@@ -113,10 +113,18 @@ public class ClientHandler implements Runnable {
 			sayToClient("Not Yet Implemented");
 		} else if(eq(cmd[0], "dm") || eq(cmd[0], "dmresponse") || eq(cmd[0], "dmmessage") || eq(cmd[0], "dmclose")) {
 			server.findByName(cmd[1]).sayToClient(rawCommand);
+		} else if(eq(cmd[0], "checkers") || eq(cmd[0], "checkersdeclined")) {
+			server.findByName(cmd[1]).sayToClient(rawCommand);
+		} else if(eq(cmd[0], "checkersstart")) {
+			int port = server.startCheckersGame(getUser().getSocket().getInetAddress(), 
+					server.findByName(cmd[1]).getUser().getSocket().getInetAddress());
+			sayToClient("\\checkersstart " + cmd[2] + " " + cmd[1] + " true " + port);
+			server.findByName(cmd[1]).sayToClient("\\checkersstart " + cmd[1] + " " + cmd[2] + " false " + port);
 		}
 		else {
 			sayToClient("Unrecognized Command! Try \\help");
 		}
+		server.sayToConsole(rawCommand);
 	}
 	
 	/**

@@ -31,7 +31,7 @@ public class Player {
 	int[] recentCapture = new int[2];//holds position of a checker that recently made a capture
 	
 	
-	public Player(Color team, InetAddress serverAddress, int port, boolean start){
+	public Player(Color team, InetAddress serverAddress, int port, int player){
 		try {
 			socket = new Socket(serverAddress, port);
 			output = new ObjectOutputStream(socket.getOutputStream());
@@ -46,10 +46,10 @@ public class Player {
 			newMove = false;
 			readInput();
 			
-			gui = new PlayerGUI(this, "BJ Chat Checkers " + start, start);
+			gui = new PlayerGUI(this, "BJ Chat Checkers P: " + player, player==1);
 			gui.updateBoard(board);
 			
-			if(start) {
+			if(player==1) {
 				gui.enable();
 				yourTurn();
 			} else gui.disable();
@@ -93,6 +93,15 @@ public class Player {
 		}
 		newBoard = false;
 		gui.updateBoard(board);
+		if(board.hasWinner()) {
+			if(board.getWinner() == teamNum) {
+				gui.victory();
+				close();
+			} else {
+				gui.loss();
+				close();
+			}
+		}
 	}
 	
 	public boolean isValidPlebMove(Checker c, int row, int col){//checks to see if the checker can move to the next space
@@ -180,8 +189,8 @@ public class Player {
 							System.out.println("Null Board Received, Exiting");
 							exit();
 							break;
-						}
-						newBoard = true;
+						} else
+							newBoard = true;
 					} catch (SocketException | EOFException e) {
 						break;
 					} catch (Exception e) {

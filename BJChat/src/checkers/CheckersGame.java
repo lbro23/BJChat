@@ -129,6 +129,7 @@ public class CheckersGame {
 			else playersTurn = 1;
 			
 			updateOtherPlayer(playersTurn);
+			if(board.hasWinner()) { close(); }
 		}
 	}
 	
@@ -190,7 +191,7 @@ public class CheckersGame {
 
 		Thread player1 = new Thread() { // thread 2
 			public void run() {
-				Player p1 = new Player(Color.BLACK, local, 4456, true);
+				Player p1 = new Player(Color.BLACK, local, 4456, 1);
 			}
 		};
 
@@ -198,7 +199,7 @@ public class CheckersGame {
 			public void run() {
 				try {
 					Thread.sleep(1000);
-					Player p2 = new Player(Color.RED, local, 4456, false);
+					Player p2 = new Player(Color.RED, local, 4456, 2);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -210,17 +211,6 @@ public class CheckersGame {
 		player1.setName("Player 1 Main");
 		player2.start();
 		player2.setName("Player 2 Main");
-		
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		for (Thread t : threadSet) {
-			System.out.println(t.getName()); 
-		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.io.PrintStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -246,12 +247,34 @@ public class Client extends Thread {
 			}
 		} else if(eq(cmd[0], "dmcloseall")) {
 			closeAllDM();
+		} else if(eq(cmd[0], "checkers")) { // COMMAND FORMAT \\checkers TO FROM 
+			if(user) {
+				String message = "\\checkers " + cmd[1] + " " + userName;
+				toServer.println(message);
+			} else {
+				boolean response = gui.booleanMessage(cmd[2] + " has requested to play Checkers with you.\nWould you like to accept?");
+				if(response) {
+					toServer.println("\\checkersstart " + cmd[2] + " " + userName);
+				} else {
+					toServer.println("\\checkersdeclined " + cmd[2] + " " + userName);
+				}
+			}
+		} else if(eq(cmd[0], "checkersdeclined")) {
+			if(user) {
+				// Nothing
+			} else {
+				gui.println("Your request to play Checkers with " + cmd[2] + " has been declined. Consider getting better friends");
+			}
+		} else if(eq(cmd[0], "checkersstart")) { // COMMAND FORMAT //checkersstart TO FROM BOOL(P1 or P2) PORT#
+			gui.println("Your checkers game with " + cmd[2] + " is beginning! Good luck!");
+			startCheckers(Boolean.parseBoolean(cmd[3]), Integer.parseInt(cmd[4]));
 		}
 		else {
 			if(user) {
 				toServer.println(rawCommand);
 			}
 		}
+		gui.println(rawCommand);
 	}
 	
 	public void updateUsers(String names) {
@@ -276,6 +299,14 @@ public class Client extends Thread {
 	public void closeAllDM() {
 		for(int i = 0; i < dms.size(); i++) {
 			dms.remove(i).exit();
+		}
+	}
+	
+	public void startCheckers(boolean starter, int port) {
+		if (starter) {
+			new checkers.Player(Color.BLACK, socket.getInetAddress(), port, 1);
+		} else {
+			new checkers.Player(Color.RED, socket.getInetAddress(), port, 2);
 		}
 	}
 	
