@@ -274,7 +274,6 @@ public class Client extends Thread {
 				toServer.println(rawCommand);
 			}
 		}
-		gui.println(rawCommand);
 	}
 	
 	public void updateUsers(String names) {
@@ -303,11 +302,24 @@ public class Client extends Thread {
 	}
 	
 	public void startCheckers(boolean starter, int port) {
-		if (starter) {
-			new checkers.Player(Color.BLACK, socket.getInetAddress(), port, 1);
-		} else {
-			new checkers.Player(Color.RED, socket.getInetAddress(), port, 2);
-		}
+		System.out.println("Creating Player on port " + port);
+		Thread t = new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if (starter) {
+					new checkers.Player(Color.BLACK, socket.getInetAddress(), port, 1);
+				} else {
+					new checkers.Player(Color.RED, socket.getInetAddress(), port, 2);
+				}
+			}
+		};
+		gui.println("New Player Created on port " + port);
+		t.start();
+
 	}
 	
 	public void removeDM(DirectMessageWindow d) { dms.remove(d); }

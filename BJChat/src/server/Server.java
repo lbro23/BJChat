@@ -28,7 +28,7 @@ public class Server extends Thread{
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
 	File banList;// hi
-	int nextAvailablePort = 4446;
+	int nextAvailablePort = 4456;
 	
 	public Server(int port, ServerGui gui) {
 		try {
@@ -261,7 +261,14 @@ public class Server extends Thread{
 	}
 	
 	public int startCheckersGame(InetAddress p1, InetAddress p2) {
-		new CheckersGame(p1, p2, nextAvailablePort);
+		System.out.println("Creating new server on port " + nextAvailablePort);
+		Thread t = new Thread() {
+			public void run() {
+				new CheckersGame(p1, p2, 4456);
+			}
+		};
+		t.start();
+		sayToConsole("New Checkers Game Created on Port: ");
 		return nextAvailablePort++;
 	}
 	

@@ -12,27 +12,25 @@ public class CheckerBoard implements Serializable {
 	public CheckerBoard(){
 		winner = -1;
 		gameBoard = new Checker[8][8];
-		gameBoard[1][1] = new Checker(1, 1, 1);
-		gameBoard[7][7] = new Checker(7, 7, 2);
-//		for(int r = 0; r < 3; r++){//assign black pieces
-//			for(int c = 0; c< gameBoard[r].length;c++){
-//				if(r%2 == 0 && c%2 == 0){
-//					gameBoard[r][c] = new Checker(r, c, 1); // 1 for black, 2 for red
-//				}else if(r%2 != 0 && c%2 != 0){
-//					gameBoard[r][c] = new Checker(r, c, 1);
-//				}
-//			}
-//		}
-//		
-//		for(int r = 5; r < gameBoard.length; r++){//assign red pieces
-//			for(int c = 0; c< gameBoard[r].length;c++){
-//				if(r%2 == 0 && c%2 == 0){
-//					gameBoard[r][c] = new Checker(r, c, 2); // 1 for black, 2 for red
-//				}else if(r%2 != 0 && c%2 != 0){
-//					gameBoard[r][c] = new Checker(r, c, 2);
-//				}
-//			}
-//		}
+		for(int r = 0; r < 3; r++){//assign black pieces
+			for(int c = 0; c< gameBoard[r].length;c++){
+				if(r%2 == 0 && c%2 == 0){
+					gameBoard[r][c] = new Checker(r, c, 1); // 1 for black, 2 for red
+				}else if(r%2 != 0 && c%2 != 0){
+					gameBoard[r][c] = new Checker(r, c, 1);
+				}
+			}
+		}
+		
+		for(int r = 5; r < gameBoard.length; r++){//assign red pieces
+			for(int c = 0; c< gameBoard[r].length;c++){
+				if(r%2 == 0 && c%2 == 0){
+					gameBoard[r][c] = new Checker(r, c, 2); // 1 for black, 2 for red
+				}else if(r%2 != 0 && c%2 != 0){
+					gameBoard[r][c] = new Checker(r, c, 2);
+				}
+			}
+		}
 		
 		
 	}//end constructor

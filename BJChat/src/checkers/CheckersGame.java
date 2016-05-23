@@ -31,6 +31,7 @@ public class CheckersGame {
 	ObjectInputStream p2Input;
 	CheckerBoard board2;
 	boolean newBoard2;
+	
 	Set<Thread> threads;
 	boolean running;
 
@@ -48,6 +49,7 @@ public class CheckersGame {
 				} else if(s.getInetAddress().equals(player2) && p2 == null) {
 					p2 = s;
 				} else {
+					s.close();
 					s = null;
 				}
 			}
