@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
-//this is stupid
 public class Player {
 	Socket socket;
 	ObjectOutputStream output;
@@ -46,7 +45,7 @@ public class Player {
 			newMove = false;
 			readInput();
 			
-			gui = new PlayerGUI(this, "BJ Chat Checkers P: " + player, player==1);
+			gui = new PlayerGUI(this, "BJ Chat Checkers", player==1);
 			gui.updateBoard(board);
 			
 			if(player==1) {
@@ -74,7 +73,6 @@ public class Player {
 	}
 	
 	public void yourTurn() throws InterruptedException, IOException, SocketException {
-		// TODO Your turn
 		gui.enable();
 		while (!userSubmit && running) {
 			Thread.sleep(3);
@@ -92,6 +90,7 @@ public class Player {
 			Thread.sleep(3);
 		}
 		newBoard = false;
+		if(board == null) {close(); return; }
 		gui.updateBoard(board);
 		if(board.hasWinner()) {
 			if(board.getWinner() == teamNum) {
@@ -186,7 +185,6 @@ public class Player {
 					try {
 						board = (CheckerBoard) input.readObject();
 						if(board == null) {
-							System.out.println("Null Board Received, Exiting");
 							exit();
 							break;
 						} else
@@ -215,7 +213,6 @@ public class Player {
 			socket.close();
 			io.interrupt();
 		} catch(Exception e) {  }
-		System.out.println("Closing Player");
 	}
 	
 	public void exit() {

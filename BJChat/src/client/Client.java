@@ -302,7 +302,6 @@ public class Client extends Thread {
 	}
 	
 	public void startCheckers(boolean starter, int port) {
-		System.out.println("Creating Player on port " + port);
 		Thread t = new Thread() {
 			public void run() {
 				try {
@@ -317,7 +316,6 @@ public class Client extends Thread {
 				}
 			}
 		};
-		gui.println("New Player Created on port " + port);
 		t.start();
 
 	}

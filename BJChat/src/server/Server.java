@@ -261,7 +261,6 @@ public class Server extends Thread{
 	}
 	
 	public int startCheckersGame(InetAddress p1, InetAddress p2) {
-		System.out.println("Creating new server on port " + nextAvailablePort);
 		Thread t = new Thread() {
 			public void run() {
 				new CheckersGame(p1, p2, 4456);

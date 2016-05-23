@@ -81,7 +81,6 @@ public class CheckersGame {
 						try {
 							board1 = (CheckerBoard) p1Input.readObject();
 							if (board1 == null) {
-								System.out.println("Received Null From P1");
 								p2Output.writeObject(null);
 								close(); break;
 							} 
@@ -101,7 +100,6 @@ public class CheckersGame {
 						try {
 							board2 = (CheckerBoard) p2Input.readObject();
 							if (board2 == null) {
-								System.out.println("Received Null From P2");
 								p1Output.writeObject(null);
 								close(); break;
 							}
@@ -149,7 +147,6 @@ public class CheckersGame {
 
 				serverSocket.close();
 				//for(Thread t: threads) t.interrupt();
-				System.out.println("Server Closed");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

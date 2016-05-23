@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -19,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
+public class PlayerGUI extends JFrame implements ActionListener, WindowListener, KeyListener{
 	
 	Player player;
 	JPanel buttonPane;
@@ -58,17 +60,17 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 		Box whole = Box.createVerticalBox();
 		Box topLine = Box.createHorizontalBox();
 		
-		JButton submit = new JButton("Submit move");
+		JButton submit = new JButton("Submit Move");
 		submit.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(player.getNewMove())
 				player.setSubmit(true);
-				
 			}
 		});
 		
 		topLine.add(label);
+		topLine.add(Box.createHorizontalStrut(10));
 		topLine.add(submit);
 		
 		whole.add(topLine);
@@ -84,15 +86,14 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 				for (int c = 0; c < 8; c++) {
 					buttons[r][c] = new JButton("");
 					buttonPane.add(buttons[r][c]);
-					buttons[r][c].addActionListener(this);
-
 					if (r % 2 == c % 2) {
+						buttons[r][c].addKeyListener(this);
+						buttons[r][c].addActionListener(this);
 						buttons[r][c].setIcon(manager.getEmptyBlack());
 						buttons[r][c].setBackground(Color.BLACK);
 					} else {
 						buttons[r][c].setIcon(manager.getEmptyWhite());
 						buttons[r][c].setBackground(Color.WHITE);
-						buttons[r][c].setEnabled(false);
 					}
 				}
 			}
@@ -101,15 +102,14 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 				for (int c = 0; c < 8; c++) {
 					buttons[r][c] = new JButton("");
 					buttonPane.add(buttons[r][c]);
-					buttons[r][c].addActionListener(this);
-
 					if (r % 2 == c % 2) {
+						buttons[r][c].addKeyListener(this);
+						buttons[r][c].addActionListener(this);
 						buttons[r][c].setIcon(manager.getEmptyBlack());
 						buttons[r][c].setBackground(Color.BLACK);
 					} else {
 						buttons[r][c].setIcon(manager.getEmptyWhite());
 						buttons[r][c].setBackground(Color.WHITE);
-						buttons[r][c].setEnabled(false);
 					}
 				}
 			}
@@ -213,6 +213,7 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 	public void disable() {
 		enabled = false;
 		label.setText("Waiting for other player...");
+		for (int i = 0; i < 4; i++) { selected[i] = -1; }
 	}
 	
 	private void invalidMove() {
@@ -243,4 +244,19 @@ public class PlayerGUI extends JFrame implements ActionListener, WindowListener{
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if(player.getNewMove())
+				player.setSubmit(true);
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
 }
