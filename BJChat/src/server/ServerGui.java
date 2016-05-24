@@ -188,5 +188,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 				 "\\clearban: clears the ban list completely\n";
 				 JOptionPane.showMessageDialog(null, help);
 	}
+	
+	public static void main(String[] args) { new ServerGui(); }
 
 }

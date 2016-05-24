@@ -11,7 +11,7 @@ public class TestFrame extends JFrame implements ActionListener{
 	JButton client, server;
 	
 	public TestFrame() {
-		super("BJ Chat Tester");
+		super("BM Chat Tester");
 		this.setLocation(50, 50);
 		this.setSize(250, 100);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);

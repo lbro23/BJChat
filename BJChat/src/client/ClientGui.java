@@ -246,4 +246,8 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	}
 	
 	public void setAutoscroll(boolean scroll) { autoscroll = scroll; }
+	
+	public static void main(String[] args) {
+		new ClientGui();
+	}
 }
