@@ -16,7 +16,6 @@ public class CheckersGame {
 	boolean closed = false;
 	int playersTurn;
 	CheckerBoard board;
-	ServerSocket serverSocket;
 	
 	//player 1 fields
 	Socket p1;
@@ -36,23 +35,12 @@ public class CheckersGame {
 	boolean running;
 
 	
-	public CheckersGame(InetAddress player1, InetAddress player2, int port){
+	public CheckersGame(Socket player1, Socket player2){
 		try{
 			threads = new HashSet<Thread>();
-			serverSocket = new ServerSocket(port);
-			
-			// connect
-			while(p1 == null || p2 == null) {
-				Socket s = serverSocket.accept();
-				if(s.getInetAddress().equals(player1) && p1 == null) {
-					p1 = s;
-				} else if(s.getInetAddress().equals(player2) && p2 == null) {
-					p2 = s;
-				} else {
-					s.close();
-					s = null;
-				}
-			}
+			p1 = player1;
+			p2 = player2;
+
 			playersTurn = 1;
 			running = true;
 
@@ -145,7 +133,6 @@ public class CheckersGame {
 				p1.close();
 				p2.close();
 
-				serverSocket.close();
 				//for(Thread t: threads) t.interrupt();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -179,37 +166,4 @@ public class CheckersGame {
 			}
 		}catch(Exception e) { e.printStackTrace(); return null; }
 	}
-	
-	public static void main(String[] args) {
-		InetAddress local = InetAddress.getLoopbackAddress();
-		Thread server = new Thread() { // thread 1
-			public void run() {
-				CheckersGame game = new CheckersGame(local, local, 4456);
-			}
-		};
-
-		Thread player1 = new Thread() { // thread 2
-			public void run() {
-				Player p1 = new Player(Color.BLACK, local, 4456, 1);
-			}
-		};
-
-		Thread player2 = new Thread() { // thread 3
-			public void run() {
-				try {
-					Thread.sleep(1000);
-					Player p2 = new Player(Color.RED, local, 4456, 2);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		server.start();
-		server.setName("Server Main");
-		player1.start();
-		player1.setName("Player 1 Main");
-		player2.start();
-		player2.setName("Player 2 Main");
-	}
-
 }

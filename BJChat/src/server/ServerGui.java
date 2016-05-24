@@ -38,7 +38,7 @@ public class ServerGui extends JFrame implements ActionListener, KeyListener{
 	boolean autoscroll = true;
 	//
 	public ServerGui() { // hi
-		super("BJ Chat Server");
+		super("BM Chat Server");
 		this.setLocation(300, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());

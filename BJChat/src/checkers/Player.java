@@ -45,7 +45,7 @@ public class Player {
 			newMove = false;
 			readInput();
 			
-			gui = new PlayerGUI(this, "BJ Chat Checkers", player==1);
+			gui = new PlayerGUI(this, "BM Chat Checkers", player==1);
 			gui.updateBoard(board);
 			
 			if(player==1) {

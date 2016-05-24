@@ -119,8 +119,7 @@ public class ClientHandler implements Runnable {
 			c.sayToClient(rawCommand);
 		} else if(eq(cmd[0], "checkersstart")) {
 			server.sayToConsole("New Checkers Game Created: " + cmd[1] + " vs. " + cmd[2]);
-			int port = server.startCheckersGame(getUser().getSocket().getInetAddress(), 
-					server.findByName(cmd[1]).getUser().getSocket().getInetAddress());
+			int port = server.startCheckersGame(this, server.findByName(cmd[1]));
 			sayToClient("\\checkersstart " + cmd[2] + " " + cmd[1] + " true " + port);
 			server.findByName(cmd[1]).sayToClient("\\checkersstart " + cmd[1] + " " + cmd[2] + " false " + port);
 		}

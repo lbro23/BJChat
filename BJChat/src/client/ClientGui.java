@@ -41,7 +41,7 @@ public class ClientGui extends JFrame implements ActionListener, KeyListener {
 	boolean autoscroll =true;
 	 // hi
 	public ClientGui(){
-		super("BJ Chat");
+		super("BM Chat");
 		this.setLocation(700, 100);
 		this.setSize(700, 600);
 		this.addWindowListener(createWindowListener());

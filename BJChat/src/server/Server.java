@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import checkers.CheckersGame;
+import checkers.GameServer;
 
 public class Server extends Thread{
 	static final int defaultPort = 4445;
+	static final int checkersport = 4456;
 	int currentId = 1;
 	ServerSocket serverSocket;
 	volatile ArrayList<ClientHandler> clients;
@@ -28,7 +30,7 @@ public class Server extends Thread{
 	String adminPassword = "default";
 	final String fileName = "Banlist.txt";
 	File banList;// hi
-	int nextAvailablePort = 4456;
+	GameServer checkersServer;
 	
 	public Server(int port, ServerGui gui) {
 		try {
@@ -42,6 +44,7 @@ public class Server extends Thread{
 				gui.println("No BanList found, creating one.");
 				PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 			}
+			checkersServer = new GameServer(checkersport);
 			gui.println("New Server Created Successfully");
 			this.start();
 		} catch (Exception e) {
@@ -260,15 +263,15 @@ public class Server extends Thread{
 		return null;
 	}
 	
-	public int startCheckersGame(InetAddress p1, InetAddress p2) {
+	public int startCheckersGame(ClientHandler p1, ClientHandler p2) {
 		Thread t = new Thread() {
 			public void run() {
-				new CheckersGame(p1, p2, 4456);
+				checkersServer.startMatch(p1.getUser().getSocket().getInetAddress(), p2.getUser().getSocket().getInetAddress());
 			}
 		};
 		t.start();
-		sayToConsole("New Checkers Game Created on Port: ");
-		return nextAvailablePort++;
+		sayToConsole("New Checkers Game Created Between " + p1.getUser().getName() + " " + p2.getUser().getName());
+		return checkersport;
 	}
 	
 	/**
