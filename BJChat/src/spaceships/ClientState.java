@@ -9,4 +9,8 @@ public class ClientState extends State {
 	public ClientState(List<Actor> actors) {
 		super(actors);
 	}
+	
+	public ClientState() {
+		super();
+	}
 }

@@ -1,6 +1,7 @@
 package spaceships;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class State implements Serializable {
@@ -11,5 +12,24 @@ public class State implements Serializable {
 	public State(List<Actor> actors) {
 		this.actors = actors;
 	}
+	
+	public State() {
+		actors = new ArrayList<Actor>();
+	}
+		
+	public List<Actor> getActors() {
+		return actors;
+	}
+	
+	public void addActor(Actor a) {
+		actors.add(a);
+	}
+	
+	public void updateAll() {
+		for(Actor a: actors) {
+			a.update();
+		}
+	}
+	
 	
 }

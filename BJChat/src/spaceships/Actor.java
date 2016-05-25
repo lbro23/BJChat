@@ -3,25 +3,37 @@ package spaceships;
 import java.awt.Graphics;
 
 public abstract class Actor {
-	protected int x;
-	protected int y;
+	protected double x;
+	protected double y;
+	protected double dX;
+	protected double dY;
 	
 	public abstract void draw(Graphics gs);
 	
-	public Actor(int x, int y){
+	public Actor(double x, double y){
 		this.x = x;
 		this.y = y;
 	}
 	
-	public void moveTo(int x, int y){
+	public void moveTo(double x, double y){
 		this.x = x;
 		this.y = y;
 	}
 	
-	public int getX(){
+	public void update() {
+		x += dX;
+		y += dY;
+	}
+	
+	public void setDirection(double dX, double dY) {
+		this.dX = dX;
+		this.dY = dY;
+	}
+	
+	public double getX(){
 		return x;
 	}
-	public int getY(){
+	public double getY(){
 		return y;
 	}
 

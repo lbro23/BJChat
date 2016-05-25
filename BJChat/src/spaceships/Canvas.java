@@ -12,24 +12,18 @@ public class Canvas extends JPanel {
 	
 	public Canvas(){
 		super();
-		toPaint = new ArrayList<Actor>();
 	}
 
 	@Override
 	public void paintComponent(Graphics g){
 		g.clearRect(0, 0, 1000, 1000);
-		Bullet b = new Bullet(300, loc++);
-		b.draw(g);
+		if(toPaint == null) return; 
 		for(Actor a: toPaint) {
 			a.draw(g);
 		}
 	}
 	
-	public void add(Actor a) {
-		toPaint.add(a);
-	}
-	
-	public void remove(Actor a) {
-		toPaint.remove(a);
+	public void paintActors(List<Actor> actors) {
+		this.toPaint = actors;
 	}
 }

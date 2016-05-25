@@ -10,4 +10,7 @@ public class GameState extends State {
 		super(actors);
 	}
 
+	public GameState() {
+		super();
+	}
 }
