@@ -68,27 +68,34 @@ public class Server extends Thread{
 				// connect to user, gather information
 				Socket newSocket = serverSocket.accept();
 				Scanner newInput = new Scanner(newSocket.getInputStream());
-				String name = newInput.nextLine();
-				
-				// check ban
-				Boolean banned = checkBan(newSocket.getInetAddress().getHostName(), name);
+				Server server = this;
+				Thread connect = new Thread(){
+					public void run(){
+						String name = newInput.nextLine();
+						
+						// check ban
+						Boolean banned = checkBan(newSocket.getInetAddress().getHostName(), name);
 
-				// create User, create clientHandler
-				User newUser = new User(newSocket, name, newInput, currentId);
-				ClientHandler handler = new ClientHandler(this, newUser);
-				Thread newThread = new Thread(handler);
-				clients.add(handler);
-				newThread.start();
+						// create User, create clientHandler
+						User newUser = new User(newSocket, name, newInput, currentId);
+						ClientHandler handler = new ClientHandler(server, newUser);
+						Thread newThread = new Thread(handler);
+						clients.add(handler);
+						newThread.start();
+						
+						if(banned) {
+							//say something to the client telling them they are banned
+							handler.sayToClient("\\kick You are banned from this server");
+							gui.println("Banned Client: " + handler.getUser().getName() + " attempted to join from " + newUser.getHostName());
+						} else {
+							gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
+							sayToAllClients(name + " has joined the server");
+							updateUsers();
+						}
+					}
+				};
+				connect.start();
 				
-				if(banned) {
-					//say something to the client telling them they are banned
-					handler.sayToClient("\\kick You are banned from this server");
-					gui.println("Banned Client: " + handler.getUser().getName() + " attempted to join from " + newUser.getHostName());
-				} else {
-					gui.println(name + " joined from " + newSocket.getInetAddress().getHostName() + " with ID " + currentId++);
-					sayToAllClients(name + " has joined the server");
-					updateUsers();
-				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
