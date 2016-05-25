@@ -8,6 +8,7 @@ public class Bullet extends Actor  {
 	public Bullet(int x, int y) {
 		super(x, y);
 	}
+	
 
 	public void draw(Graphics g){
 		g.setColor(Color.red);
