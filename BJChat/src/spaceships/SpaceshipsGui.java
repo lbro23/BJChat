@@ -21,6 +21,7 @@ public class SpaceshipsGui extends JFrame {
 		canvas = new JPanel();
 		canvas.setPreferredSize(new Dimension(500, 500));
 		canvas.setBackground(Color.BLACK);
+		
 		Box wholeH = Box.createHorizontalBox();
 		Box wholeV = Box.createVerticalBox();
 		
@@ -39,8 +40,13 @@ public class SpaceshipsGui extends JFrame {
 		// TODO Draw Game from game state
 	}
 	
+
+	
 	public static void main(String[] args) {
-		new SpaceshipsGui();
+		SpaceshipsGui gui = new SpaceshipsGui();
+		Bullet b = new Bullet(100, 100);
+		b.draw(gui.canvas.getGraphics());
 	}
 
 }
+

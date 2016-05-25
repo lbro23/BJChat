@@ -8,6 +8,11 @@ public abstract class Actor {
 	
 	public abstract void draw(Graphics gs);
 	
+	public Actor(int x, int y){
+		this.x = x;
+		this.y = y;
+	}
+	
 	public void moveTo(int x, int y){
 		this.x = x;
 		this.y = y;
