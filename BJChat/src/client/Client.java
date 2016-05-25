@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.html.HTML;
 public class Client extends Thread {
 	ArrayList<DirectMessageWindow> dms;
@@ -268,12 +269,25 @@ public class Client extends Thread {
 		} else if(eq(cmd[0], "checkersstart")) { // COMMAND FORMAT //checkersstart TO FROM BOOL(P1 or P2) PORT#
 			gui.println("Your checkers game with " + cmd[2] + " is beginning! Good luck!");
 			startCheckers(Boolean.parseBoolean(cmd[3]), Integer.parseInt(cmd[4]));
+		} else if(eq(cmd[0], "help")) {
+			showHelp();
 		}
 		else {
 			if(user) {
 				toServer.println(rawCommand);
 			}
 		}
+	}
+	
+	public void showHelp() {
+		JOptionPane.showMessageDialog(null, "	List of Available Commands:\n" +
+				"\\kill : Disconnect from server, close client\n" + 
+				"\\disconnect : Disconnect from server\n" + 
+				"\\ping : Ping server and check latency\n" + 
+				"\\whisper USERNAME MESSAGE : Send message to USERNAME\n" + 
+				"\\dm USERNAME : Open dm session with USERNAME\n" +
+				"\\dmcloseall : Closes all dm sessions\n" + 
+				"\\checkers USERNAME : Requests to open a game of checkers with USERNAME\n" );
 	}
 	
 	public void updateUsers(String names) {
