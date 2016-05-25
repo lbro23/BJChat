@@ -18,7 +18,7 @@ public class SpaceshipsGui extends JFrame {
 	}
 	
 	public void setupGui() {
-		canvas = new JPanel();
+		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(500, 500));
 		canvas.setBackground(Color.BLACK);
 		
@@ -44,8 +44,7 @@ public class SpaceshipsGui extends JFrame {
 	
 	public static void main(String[] args) {
 		SpaceshipsGui gui = new SpaceshipsGui();
-		Bullet b = new Bullet(100, 100);
-		b.draw(gui.canvas.getGraphics());
+		gui.canvas.repaint();
 	}
 
 }
