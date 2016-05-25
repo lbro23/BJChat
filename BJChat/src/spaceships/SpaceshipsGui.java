@@ -38,6 +38,7 @@ public class SpaceshipsGui extends JFrame {
 	}
 	
 	public void drawGame(GameState state) {
+		canvas.repaint();
 		// TODO Draw Game from game state
 	}
 	
@@ -45,7 +46,6 @@ public class SpaceshipsGui extends JFrame {
 	
 	public static void main(String[] args) {
 		SpaceshipsGui gui = new SpaceshipsGui();
-		gui.canvas.repaint();
 	}
 
 }
