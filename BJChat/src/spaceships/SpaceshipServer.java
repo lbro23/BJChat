@@ -18,6 +18,9 @@ public class SpaceshipServer extends Thread {
 	ServerSocket socket;
 	boolean running;
 	
+	// Map Items
+	List<Actor> props;
+	
 	// Clients
 	List<SocketSucker> clients;
 	
@@ -36,6 +39,8 @@ public class SpaceshipServer extends Thread {
 		}
 		
 		clients = new ArrayList<SocketSucker>();
+		props = new ArrayList<Actor>();
+		populateProps();
 		
 		running = true;
 		// this.start();
@@ -73,7 +78,18 @@ public class SpaceshipServer extends Thread {
 	
 	@Override
 	public void run() {
-		// TODO EVERYTHING
+		ArrayList<Actor> actors = new ArrayList<Actor>();
+		for(SocketSucker s: clients) {
+			actors.addAll(s.getLastState().getActors());
+		}
+		actors.addAll(props);
+		// TODO Update Actors
+		// TODO PROCESS ALL ACTORS
+		// TODO SEND THIS CRAP TO ALL THE CLIENTS
+	}
+	
+	public void populateProps() {
+		// TODO Add all props, Define Map
 	}
 	
 	public static void main(String[] args) {
@@ -93,7 +109,6 @@ public class SpaceshipServer extends Thread {
 		
 		client.start();
 	}
-
 }
 
 /**
@@ -140,7 +155,7 @@ class SocketSucker extends Thread {
 		}
 	}
 	
-	public ClientState getLatestState() {
+	public ClientState getLastState() {
 		return lastState;
 	}
 	
