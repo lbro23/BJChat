@@ -26,7 +26,7 @@ public class DirectMessageWindow extends JFrame implements ActionListener, KeyLi
 	String target, source; // hi
 	
 	public DirectMessageWindow(String target, String source, Client c) {
-		super("BJ Chat DM with " + target);
+		super("BM Chat DM with " + target);
 		this.target = target;
 		this.source = source;
 		this.setLocation(500, 100);

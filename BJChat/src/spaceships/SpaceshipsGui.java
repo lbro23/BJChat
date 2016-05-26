@@ -62,6 +62,10 @@ public class SpaceshipsGui extends JFrame implements KeyListener {
 		b.setDirection(1, 1);
 		actors.add(b);
 		
+		Ship shoop = new Ship(100, 100);
+		shoop.setDirection(1, 1);
+		actors.add(shoop);
+		
 		GameState state = new GameState(actors);
 		
 		for(int i = 0; i < 100; i++) {
